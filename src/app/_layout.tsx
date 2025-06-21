@@ -1,7 +1,6 @@
 // Import  global CSS file
 import '../../global.css';
 
-import { Env } from '@env';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
@@ -55,6 +54,9 @@ function Providers({ children }: { children: React.ReactNode }) {
     readSettings();
     readCategories();
     readTransactions();
+
+    // Hide splash screen after initialization
+    SplashScreen.hideAsync();
   });
   return (
     <GestureHandlerRootView
@@ -65,10 +67,7 @@ function Providers({ children }: { children: React.ReactNode }) {
         <ThemeProvider value={theme}>
           <APIProvider>
             <BottomSheetModalProvider>
-              <AppLinkWrapper
-                uri={Env.API_URL}
-                loader={<Text>Loading...</Text>}
-              >
+              <AppLinkWrapper loader={<Text>Loading...</Text>}>
                 {children}
               </AppLinkWrapper>
               <FlashMessage position="top" />

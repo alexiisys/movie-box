@@ -1,20 +1,30 @@
 import React from 'react';
+import { Text, View } from 'react-native';
+import WebView from 'react-native-webview';
 
-import CustomWebView from '@/components/webview/custom-web-view';
 import { useIsWebView } from '@/lib';
 import { type AppLinkWrapperProps } from '@/types';
 
 export default function AppLinkWrapper({
-  children,
-  uri: _uri,
-  loader,
-}: AppLinkWrapperProps) {
-  const [uri, loading, webview] = useIsWebView(_uri);
-  return loading ? (
-    loader
-  ) : webview ? (
-    <CustomWebView source={{ uri: uri as string }} />
-  ) : (
-    children
-  );
+  children: _children,
+  loader: _loader,
+}: Omit<AppLinkWrapperProps, 'uri'>) {
+  const [uri, loading, webview] = useIsWebView();
+
+  if (loading) {
+    return _loader;
+  }
+
+  if (webview) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Text style={{ padding: 10, backgroundColor: '#f0f0f0', fontSize: 12 }}>
+          {uri}
+        </Text>
+        <WebView source={{ uri }} style={{ flex: 1 }} />
+      </View>
+    );
+  }
+
+  return _children;
 }

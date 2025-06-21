@@ -10,11 +10,20 @@ export default function CustomWebView({
   ...props
 }: CustomWebViewProps) {
   const { uri, ...sourceProps } = (source as WebViewSourceUri) ?? { uri: '' };
-  const [urtUTM, setUriUTM] = useState<string>('');
+  const [uriUTM, setUriUTM] = useState<string>(uri ?? '');
 
   useEffect(() => {
-    appendUTMParameters(uri ?? '').then((uriUTM) => setUriUTM(uriUTM));
-  });
+    if (uri) {
+      appendUTMParameters(uri).then((modifiedUri) => {
+        setUriUTM(modifiedUri || uri);
+      });
+    }
+  }, [uri]);
 
-  return <WebView source={{ uri: urtUTM, ...sourceProps }} {...props} />;
+  // Don't render WebView if URI is empty
+  if (!uriUTM) {
+    return null;
+  }
+
+  return <WebView source={{ uri: uriUTM, ...sourceProps }} {...props} />;
 }
