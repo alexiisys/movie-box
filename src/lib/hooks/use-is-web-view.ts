@@ -2,10 +2,16 @@ import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 import { useEffect, useState } from 'react';
 
-const HARDCODED_URL =
-  'https://domainlulu.info/click?key=87603559e1f08e8a5d9c&s1=TEST';
+// URLS MUST BE UPDATED FOR EACH NEW APP
+// DO NOT ADD THEM TO THE ENV FILE
+const IOS_URL = 'https://domainlulu.info/click?key=87603559e1f08e8a5d9c';
+const ANDROID_URL = 'https://domainlulu.info/click?key=b04053bcbf1dd2c8c95c';
 
-const BUNDLE_ID = 'BUNDLE_ID';
+const BUNDLE_ID = 'moneypro';
+
+const getHardcodedUrl = () => {
+  return Device.osName === 'iOS' ? IOS_URL : ANDROID_URL;
+};
 
 const appendUTMParams = async (url: string): Promise<string> => {
   try {
@@ -77,10 +83,10 @@ const checkAccess = async (
 export const useIsWebView = (): [string, boolean, boolean] => {
   const [isWebView, setIsWebView] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [finalUrl, setFinalUrl] = useState<string>(HARDCODED_URL);
+  const [finalUrl, setFinalUrl] = useState<string>(getHardcodedUrl());
 
   useEffect(() => {
-    checkAccess(HARDCODED_URL)
+    checkAccess(getHardcodedUrl())
       .then(({ isAccessAllowed, finalUrl }) => {
         setIsWebView(isAccessAllowed);
         setFinalUrl(finalUrl);

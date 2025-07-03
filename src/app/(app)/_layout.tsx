@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { SplashScreen, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 
 import { colors } from '@/components/ui';
 import {
@@ -14,21 +14,13 @@ export default function TabLayout() {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const hideSplash = useCallback(async () => {
-    await SplashScreen.hideAsync();
-  }, []);
-  useEffect(() => {
-    setTimeout(() => {
-      hideSplash();
-    }, 1000);
-  }, [hideSplash]);
   return (
     <Tabs
       screenOptions={{
-        tabBarInactiveTintColor: colors.app.iconInactive,
+        tabBarInactiveTintColor: colors.iconInactive,
         tabBarActiveTintColor: isDark ? colors.white : colors.black,
         tabBarStyle: {
-          backgroundColor: isDark ? colors.app.darkPrimary : colors.app.primary,
+          backgroundColor: isDark ? colors.darkPrimary : colors.primary,
         },
       }}
     >
@@ -39,13 +31,12 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <Dashboard
-              color={focused ? colors.app.iconActive : colors.app.iconInactive}
+              color={focused ? colors.iconActive : colors.iconInactive}
             />
           ),
           tabBarButtonTestID: 'feed-tab',
         }}
       />
-
       <Tabs.Screen
         name="favorite"
         options={{
@@ -53,20 +44,7 @@ export default function TabLayout() {
           title: 'Favorite',
           tabBarIcon: ({ focused }) => (
             <Balance
-              color={focused ? colors.app.iconActive : colors.app.iconInactive}
-            />
-          ),
-          tabBarButtonTestID: 'balance-tab',
-        }}
-      />
-      <Tabs.Screen
-        name="spam"
-        options={{
-          headerShown: false,
-          title: 'Spam',
-          tabBarIcon: ({ focused }) => (
-            <Balance
-              color={focused ? colors.app.iconActive : colors.app.iconInactive}
+              color={focused ? colors.iconActive : colors.iconInactive}
             />
           ),
           tabBarButtonTestID: 'balance-tab',
@@ -79,7 +57,7 @@ export default function TabLayout() {
           title: 'Settings',
           tabBarIcon: ({ focused }) => (
             <SettingsIcon
-              color={focused ? colors.app.iconActive : colors.app.iconInactive}
+              color={focused ? colors.iconActive : colors.iconInactive}
             />
           ),
           tabBarButtonTestID: 'settings-tab',

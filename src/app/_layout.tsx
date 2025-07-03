@@ -13,11 +13,8 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { APIProvider } from '@/api';
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
-import { hydrateAuth, loadSelectedTheme } from '@/lib';
-import { readAccounts } from '@/lib/storages/accounts';
-import { readCategories } from '@/lib/storages/categories';
-import { readSettings } from '@/lib/storages/settings';
-import { readTransactions } from '@/lib/storages/transactions';
+import { loadSelectedTheme } from '@/lib';
+import { readSettings } from '@/lib/storage';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
 export { ErrorBoundary } from 'expo-router';
@@ -26,7 +23,6 @@ export const unstable_settings = {
   initialRouteName: '(app)',
 };
 
-hydrateAuth();
 loadSelectedTheme();
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -41,7 +37,6 @@ export default function RootLayout() {
     <Providers>
       <Stack>
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        <Stack.Screen name="report" />
       </Stack>
     </Providers>
   );
@@ -50,13 +45,7 @@ export default function RootLayout() {
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
   useEffect(() => {
-    readAccounts();
     readSettings();
-    readCategories();
-    readTransactions();
-
-    // Hide splash screen after initialization
-    SplashScreen.hideAsync();
   });
   return (
     <GestureHandlerRootView

@@ -34,11 +34,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   updates: {
     fallbackToCacheTimeout: 0,
+    url: `https://u.expo.dev/${Env.EAS_PROJECT_ID}`,
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    supportsTablet: true,
+    supportsTablet: false,
     bundleIdentifier: Env.BUNDLE_ID,
+    buildNumber: '1',
+    associatedDomains: [
+      'applinks:8wxde.app.link',
+      'applinks:8wxde-alternate.app.link',
+    ],
     config: {
       usesNonExemptEncryption: false, // Avoid the export compliance warning on the app store
     },
@@ -47,11 +53,29 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   android: {
+    versionCode: 1,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#2E3C4B',
     },
     package: Env.PACKAGE,
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          {
+            scheme: 'https',
+            host: '8wxde.app.link',
+          },
+          {
+            scheme: 'https',
+            host: '8wxde-alternate.app.link',
+          },
+        ],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
   },
   web: {
     favicon: './assets/favicon.png',
@@ -62,6 +86,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       '@config-plugins/react-native-branch',
       {
         apiKey: Env.BRANCH_SDK_KEY,
+        liveKey: Env.BRANCH_SDK_KEY,
+        testKey: Env.BRANCH_TEST_SDK_KEY,
       },
     ],
     [
@@ -73,7 +99,26 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     [
+      'expo-image-picker',
+      {
+        photosPermission: 'The app accesses your photos.',
+      },
+    ],
+    [
       'expo-font',
+      {
+        fonts: [
+          './assets/fonts/Gilroy-Regular.ttf',
+          './assets/fonts/Gilroy-Bold.ttf',
+          './assets/fonts/Gilroy-SemiBold.ttf',
+          './assets/fonts/Gilroy-Medium.ttf',
+          './assets/fonts/Gilroy-ExtraBold.ttf',
+          './assets/fonts/Gilroy-Thin.ttf',
+          './assets/fonts/Gilroy-UltraLight.ttf',
+          './assets/fonts/Gilroy-Light.ttf',
+          './assets/fonts/Gilroy-Black.ttf',
+        ],
+      },
     ],
     'expo-localization',
     'expo-router',

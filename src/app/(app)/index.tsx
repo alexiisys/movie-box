@@ -1,11 +1,14 @@
 import React from 'react';
 
-import { Text, View } from '@/components/ui';
+import { FocusAwareStatusBar, SafeAreaView, Text } from '@/components/ui';
 
 export default function Contacts() {
   return (
-    <View className="flex-1">
-      <Text>Контакты</Text>
-    </View>
+    <>
+      <FocusAwareStatusBar />
+      <SafeAreaView className="mt-4 flex-1 gap-4 px-6">
+        <Text>Index</Text>
+      </SafeAreaView>
+    </>
   );
 }

@@ -162,7 +162,7 @@ const ModalHeader = React.memo(({ title, dismiss }: ModalHeaderProps) => {
     <View className="flex-row items-center px-4">
       <View className="flex-1 " />
       <View className="flex-2">
-        <Text className="text-center font-inter text-2xl">
+        <Text className="text-center font-gilroy-700 text-2xl">
           {title || ''}
         </Text>
       </View>

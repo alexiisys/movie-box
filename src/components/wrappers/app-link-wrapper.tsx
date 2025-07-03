@@ -1,5 +1,7 @@
+import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { View } from 'react-native';
 import WebView from 'react-native-webview';
 
 import { useIsWebView } from '@/lib';
@@ -11,16 +13,24 @@ export default function AppLinkWrapper({
 }: Omit<AppLinkWrapperProps, 'uri'>) {
   const [uri, loading, webview] = useIsWebView();
 
-  if (loading) {
-    return _loader;
-  }
+  // Hide splash screen once webview loading is complete
+  useEffect(() => {
+    if (!loading) {
+      const hideSplash = async () => {
+        await SplashScreen.hideAsync();
+      };
+      hideSplash();
+    }
+  }, [loading]);
+
+  //
+  // if (loading) {
+  //   return _loader;
+  // }
 
   if (webview) {
     return (
       <View style={{ flex: 1 }}>
-        <Text style={{ padding: 10, backgroundColor: '#f0f0f0', fontSize: 12 }}>
-          {uri}
-        </Text>
         <WebView source={{ uri }} style={{ flex: 1 }} />
       </View>
     );
