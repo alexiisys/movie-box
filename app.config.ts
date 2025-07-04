@@ -86,8 +86,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       '@config-plugins/react-native-branch',
       {
         apiKey: Env.BRANCH_SDK_KEY,
-        liveKey: Env.BRANCH_SDK_KEY,
-        testKey: Env.BRANCH_TEST_SDK_KEY,
       },
     ],
     [
