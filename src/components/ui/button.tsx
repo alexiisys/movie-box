@@ -9,21 +9,21 @@ const button = tv({
   slots: {
     container:
       'flex flex-1 flex-row items-center justify-center gap-2 rounded-lg',
-    label: 'font-gilroy-600 text-lg',
+    label: 'font-inter text-lg font-semibold',
   },
 
   variants: {
     variant: {
       default: {
-        container: 'bg-second',
+        container: 'bg-blue',
         label: 'text-white',
       },
       secondary: {
         container: 'bg-white shadow-md',
-        label: 'text-black',
+        label: 'text-blue',
       },
       inactive: {
-        container: '',
+        container: 'bg-lightGrey2',
         label: 'text-black dark:text-white',
       },
     },
@@ -103,12 +103,14 @@ export const Button = React.forwardRef<View, Props>(
         ) : (
           <>
             {icon}
-            <Text
-              testID={testID ? `${testID}-label` : undefined}
-              className={styles.label({ className: textClassName })}
-            >
-              {text}
-            </Text>
+            {text && (
+              <Text
+                testID={testID ? `${testID}-label` : undefined}
+                className={styles.label({ className: textClassName })}
+              >
+                {text}
+              </Text>
+            )}
           </>
         )}
       </TouchableOpacity>

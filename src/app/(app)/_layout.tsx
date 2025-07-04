@@ -1,66 +1,30 @@
-/* eslint-disable react/no-unstable-nested-components */
 import { Tabs } from 'expo-router';
-import { useColorScheme } from 'nativewind';
 import React from 'react';
 
 import { colors } from '@/components/ui';
-import {
-  Balance,
-  Dashboard,
-  Settings as SettingsIcon,
-} from '@/components/ui/icons';
+import { Movie, Settings } from '@/components/ui/icons';
 
 export default function TabLayout() {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarInactiveTintColor: colors.iconInactive,
-        tabBarActiveTintColor: isDark ? colors.white : colors.black,
-        tabBarStyle: {
-          backgroundColor: isDark ? colors.darkPrimary : colors.primary,
-        },
-      }}
-    >
+    <Tabs screenOptions={{}}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
+          title: 'Movies',
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Dashboard
-              color={focused ? colors.iconActive : colors.iconInactive}
-            />
+            <Movie color={focused ? colors.blue : colors.textGrey} />
           ),
-          tabBarButtonTestID: 'feed-tab',
-        }}
-      />
-      <Tabs.Screen
-        name="favorite"
-        options={{
-          headerShown: false,
-          title: 'Favorite',
-          tabBarIcon: ({ focused }) => (
-            <Balance
-              color={focused ? colors.iconActive : colors.iconInactive}
-            />
-          ),
-          tabBarButtonTestID: 'balance-tab',
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          headerShown: false,
           title: 'Settings',
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <SettingsIcon
-              color={focused ? colors.iconActive : colors.iconInactive}
-            />
+            <Settings color={focused ? colors.blue : colors.textGrey} />
           ),
-          tabBarButtonTestID: 'settings-tab',
         }}
       />
     </Tabs>

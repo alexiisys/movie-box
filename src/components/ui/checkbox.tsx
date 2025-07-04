@@ -67,12 +67,13 @@ const Label = ({ text, testID, className = '' }: LabelProps) => {
   return (
     <Text
       testID={testID}
-      className={` ${className} pl-2 font-gilroy-700 text-xl`}
+      className={` ${className} pl-2 font-inter text-base font-bold text-textGrey`}
     >
       {text}
     </Text>
   );
 };
+
 export const CheckboxIcon = ({ checked = false }: IconProps) => {
   const color = checked ? colors.primary[300] : colors.charcoal[400];
   return (
@@ -154,7 +155,7 @@ export const RadioIcon = ({ checked = false }: IconProps) => {
         borderColor: color,
       }}
       className="items-center justify-center rounded-[20px] border-2 bg-transparent"
-      from={{ borderColor: '#CCCFD6' }}
+      from={{ borderColor: '#848B96' }}
       animate={{
         borderColor: color,
       }}
@@ -205,7 +206,7 @@ export const SwitchIcon = ({ checked = false }: IconProps) => {
     ? THUMB_OFFSET
     : WIDTH - THUMB_WIDTH - THUMB_OFFSET;
 
-  const backgroundColor = checked ? colors.iconInactive : colors.iconActive;
+  const backgroundColor = checked ? colors.light : colors.textGrey;
 
   return (
     <View className="w-[50px] justify-center">
