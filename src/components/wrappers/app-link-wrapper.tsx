@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import WebView from 'react-native-webview';
 
 import { useIsWebView } from '@/lib';
+import { Env } from '@/lib/env';
 import { type AppLinkWrapperProps } from '@/types';
 
 export default function AppLinkWrapper({
@@ -28,7 +29,7 @@ export default function AppLinkWrapper({
   //   return _loader;
   // }
 
-  if (webview) {
+  if (webview && Env.APP_ENV !== 'development') {
     return (
       <View style={{ flex: 1 }}>
         <WebView source={{ uri }} style={{ flex: 1 }} />

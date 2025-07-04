@@ -11,10 +11,10 @@ const DarkTheme: Theme = {
   ..._DarkTheme,
   colors: {
     ..._DarkTheme.colors,
-    primary: colors.iconActive,
-    background: colors.darkBackground,
-    text: colors.white,
-    border: colors.darkBorder,
+    primary: colors.blue,
+    background: colors.light,
+    text: colors.black,
+    border: colors.textGrey,
   },
 };
 
@@ -22,10 +22,10 @@ const LightTheme: Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.iconActive,
-    background: colors.white,
+    primary: colors.blue,
+    background: colors.light,
     text: colors.black,
-    border: colors.border,
+    border: colors.textGrey,
   },
 };
 

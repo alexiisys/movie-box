@@ -83,6 +83,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
+      'expo-image-picker',
+      {
+        photosPermission: 'The app accesses your photos.',
+      },
+    ],
+    [
       '@config-plugins/react-native-branch',
       {
         apiKey: Env.BRANCH_SDK_KEY,
@@ -115,6 +121,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           './assets/fonts/Gilroy-UltraLight.ttf',
           './assets/fonts/Gilroy-Light.ttf',
           './assets/fonts/Gilroy-Black.ttf',
+          './assets/fonts/Inter.ttf',
         ],
       },
     ],
