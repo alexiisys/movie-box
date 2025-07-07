@@ -26,6 +26,7 @@ require('dotenv').config({
 
 // TODO: Replace these values with your own
 
+
 const BUNDLE_ID = 'com.moviesaver'; // ios bundle id
 const PACKAGE = 'com.moviesaver'; // android package name
 const NAME = 'Movie Saver+'; // app name
@@ -34,6 +35,8 @@ const EAS_PROJECT_ID = 'c3e1075b-6fe7-4686-aa49-35b46a229044'; // eas project id
 const SCHEME = 'MovieSaver'; // app scheme
 const PRIVACY_POLICY = 'https://v0-movie-psi.vercel.app/privacy-policy'; // app scheme
 const FEEDBACK_FORM = 'https://v0-movie-psi.vercel.app/feedback-form'; // app scheme
+const FACEBOOK_APPID = '48127127xxxxxxxx'; // TODO
+const FACEBOOK_ClIENT_TOKEN = 'c5078631e4065b60d7544a95xxxxxxxx'; //TODO
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
  * Add a suffix to variable env based on APP_ENV
@@ -81,6 +84,8 @@ const buildTime = z.object({
   EAS_PROJECT_ID: z.string(),
   // ADD YOUR BUILD TIME ENV VARS HERE
   BRANCH_TEST_SDK_KEY: z.string(),
+  FACEBOOK_APPID: z.string(),
+  FACEBOOK_ClIENT_TOKEN: z.string(),
   BRANCH_SDK_KEY: z.string(),
   SECRET_KEY: z.string(),
 });
@@ -107,6 +112,8 @@ const _clientEnv = {
 const _buildTimeEnv = {
   EXPO_ACCOUNT_OWNER,
   EAS_PROJECT_ID,
+  FACEBOOK_APPID,
+  FACEBOOK_ClIENT_TOKEN,
   // ADD YOUR ENV VARS HERE TOO
   BRANCH_TEST_SDK_KEY: process.env.BRANCH_TEST_SDK_KEY,
   BRANCH_SDK_KEY: process.env.BRANCH_SDK_KEY,

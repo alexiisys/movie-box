@@ -83,9 +83,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
-      'expo-image-picker',
+      'expo-tracking-transparency',
       {
-        photosPermission: 'The app accesses your photos.',
+        userTrackingPermission:
+          'This identifier will be used to deliver personalized ads to you.',
+      },
+    ],
+    [
+      'react-native-fbsdk-next',
+      {
+        appID: Env.FACEBOOK_APPID,
+        clientToken: Env?.FACEBOOK_ClIENT_TOKEN,
+        displayName: Env?.NAME,
+        scheme: `fb${Env?.FACEBOOK_APPID}`,
+        advertiserIDCollectionEnabled: false,
+        autoLogAppEventsEnabled: true,
+        isAutoInitEnabled: true,
+        iosUserTrackingPermission:
+          'This identifier will be used to deliver personalized ads to you.',
       },
     ],
     [
