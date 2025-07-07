@@ -38,7 +38,6 @@ import { Pressable, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { Close } from '@/components/ui/icons';
-import { useSelectedTheme } from '@/lib';
 
 import { Text } from './text';
 
@@ -162,7 +161,7 @@ const ModalHeader = React.memo(({ title, dismiss }: ModalHeaderProps) => {
     <View className="flex-row items-center px-4">
       <View className="flex-1 " />
       <View className="flex-2">
-        <Text className="text-center font-gilroy-700 text-2xl">
+        <Text className="text-center font-inter text-2xl font-bold">
           {title || ''}
         </Text>
       </View>
@@ -172,8 +171,6 @@ const ModalHeader = React.memo(({ title, dismiss }: ModalHeaderProps) => {
 });
 
 const CloseButton = ({ close }: { close: () => void }) => {
-  const { selectedTheme } = useSelectedTheme();
-  const isDark = selectedTheme === 'dark';
   return (
     <Pressable
       onPress={close}
@@ -183,7 +180,7 @@ const CloseButton = ({ close }: { close: () => void }) => {
       accessibilityRole="button"
       accessibilityHint="closes the modal"
     >
-      <Close className="self-end" color={isDark ? '#fff' : '#000'} />
+      <Close className="self-end" color={'#ffffff'} />
     </Pressable>
   );
 };

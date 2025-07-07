@@ -16,22 +16,28 @@ import { Text } from './text';
 
 const inputTv = tv({
   slots: {
-    container: 'flex-1',
+    container: '',
     inputContainer: 'align-center relative flex-row gap-2',
-    label: 'text-md mb-2 font-gilroy font-medium text-grey',
+    label: 'mb-2 font-inter text-lg font-medium text-textGrey',
     input:
-      'rounded-xl border-neutral-300 bg-light p-4 font-gilroy text-base font-medium leading-5  dark:border-neutral-700 dark:bg-dark dark:text-white',
+      'rounded-xl border-neutral-300 bg-bgGrey p-4 font-inter text-base font-medium  leading-5 dark:border-neutral-700 dark:text-white',
   },
 
   variants: {
     outlined: {
       true: {
-        input: 'rounded-xl border border-stroke bg-white ',
+        input: 'rounded-xl border border-border bg-white',
       },
     },
     focused: {
       true: {
         input: '',
+      },
+    },
+    search: {
+      true: {
+        input: 'bg-textGrey text-white',
+        inputContainer: 'items-center rounded-md bg-textGrey px-2',
       },
     },
     error: {
@@ -57,8 +63,8 @@ export interface NInputProps extends TextInputProps {
   label?: string;
   disabled?: boolean;
   error?: string;
+  search?: boolean;
   outlined?: boolean;
-  require?: boolean;
   icon?: ReactElement;
   leftIcon?: ReactElement;
 }
@@ -89,7 +95,7 @@ export const Input = React.forwardRef<NTextInput, NInputProps>((props, ref) => {
     icon,
     outlined,
     leftIcon,
-    require,
+    search,
     ...inputProps
   } = props;
   const [isFocussed, setIsFocussed] = React.useState(false);
@@ -103,8 +109,9 @@ export const Input = React.forwardRef<NTextInput, NInputProps>((props, ref) => {
         focused: isFocussed,
         disabled: Boolean(props.disabled),
         outlined: Boolean(outlined),
+        search: Boolean(search),
       }),
-    [error, isFocussed, props.disabled, outlined]
+    [error, isFocussed, props.disabled, outlined, search]
   );
 
   return (
@@ -115,7 +122,6 @@ export const Input = React.forwardRef<NTextInput, NInputProps>((props, ref) => {
           className={styles.label()}
         >
           {label}
-          {require && <Text className="text-coralPink">*</Text>}
         </Text>
       )}
       <View className={styles.inputContainer()}>

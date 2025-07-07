@@ -101,7 +101,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         isAutoInitEnabled: true,
         iosUserTrackingPermission:
           'This identifier will be used to deliver personalized ads to you.',
-      },
     ],
     [
       '@config-plugins/react-native-branch',
@@ -136,6 +135,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           './assets/fonts/Gilroy-UltraLight.ttf',
           './assets/fonts/Gilroy-Light.ttf',
           './assets/fonts/Gilroy-Black.ttf',
+          './assets/fonts/Inter.ttf',
         ],
       },
     ],

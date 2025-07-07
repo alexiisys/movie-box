@@ -19,6 +19,7 @@ module.exports = {
         'gilroy-800': ['Gilroy-ExtraBold'],
         'gilroy-900': ['Gilroy-Black'],
         gilroy: ['Gilroy-Regular'],
+        inter: ['Inter'],
       },
       colors,
     },

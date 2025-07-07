@@ -26,21 +26,17 @@ require('dotenv').config({
 
 // TODO: Replace these values with your own
 
-const BUNDLE_ID = 'com.base.app'; // ios bundle id TODO
-const PACKAGE = 'com.base.app'; // android package name TODO
-const NAME = 'BASE'; // app name  TODO
-const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner TODO
-const EAS_PROJECT_ID = 'c3e1079b-6fe7-4686-7a49-35b4666a6229044'; // eas project id TODO
-const SCHEME = 'base'; // app scheme TODO
 
-const PRIVACY_POLICY =
-  'https://v0-privacy-policy-page-alpha.vercel.app/privacy-policy'; // TODO
-const FEEDBACK_FORM =
-  'https://v0-privacy-policy-page-alpha.vercel.app/feedback-form'; //TODO
-
+const BUNDLE_ID = 'com.moviesaver'; // ios bundle id
+const PACKAGE = 'com.moviesaver'; // android package name
+const NAME = 'Movie Saver+'; // app name
+const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner
+const EAS_PROJECT_ID = 'c3e1075b-6fe7-4686-aa49-35b46a229044'; // eas project id
+const SCHEME = 'MovieSaver'; // app scheme
+const PRIVACY_POLICY = 'https://v0-movie-psi.vercel.app/privacy-policy'; // app scheme
+const FEEDBACK_FORM = 'https://v0-movie-psi.vercel.app/feedback-form'; // app scheme
 const FACEBOOK_APPID = '48127127xxxxxxxx'; // TODO
 const FACEBOOK_ClIENT_TOKEN = 'c5078631e4065b60d7544a95xxxxxxxx'; //TODO
-
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
  * Add a suffix to variable env based on APP_ENV

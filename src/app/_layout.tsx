@@ -12,11 +12,11 @@ import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { readMovies } from 'src/lib/storage/modules/movies';
 
 import { APIProvider } from '@/api';
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
-import { readSettings } from '@/lib/storage';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
 export { ErrorBoundary } from 'expo-router';
@@ -55,8 +55,8 @@ function Providers({ children }: { children: React.ReactNode }) {
     }
   };
   useEffect(() => {
-    readSettings();
     faceBookInit();
+    readMovies();
   });
   return (
     <GestureHandlerRootView
