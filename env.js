@@ -32,10 +32,14 @@ const NAME = 'BASE'; // app name  TODO
 const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner TODO
 const EAS_PROJECT_ID = 'c3e1079b-6fe7-4686-7a49-35b4666a6229044'; // eas project id TODO
 const SCHEME = 'base'; // app scheme TODO
+
 const PRIVACY_POLICY =
   'https://v0-privacy-policy-page-alpha.vercel.app/privacy-policy'; // TODO
 const FEEDBACK_FORM =
   'https://v0-privacy-policy-page-alpha.vercel.app/feedback-form'; //TODO
+
+const FACEBOOK_APPID = '48127127xxxxxxxx'; // TODO
+const FACEBOOK_ClIENT_TOKEN = 'c5078631e4065b60d7544a95xxxxxxxx'; //TODO
 
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
@@ -84,6 +88,8 @@ const buildTime = z.object({
   EAS_PROJECT_ID: z.string(),
   // ADD YOUR BUILD TIME ENV VARS HERE
   BRANCH_TEST_SDK_KEY: z.string(),
+  FACEBOOK_APPID: z.string(),
+  FACEBOOK_ClIENT_TOKEN: z.string(),
   BRANCH_SDK_KEY: z.string(),
   SECRET_KEY: z.string(),
 });
@@ -110,6 +116,8 @@ const _clientEnv = {
 const _buildTimeEnv = {
   EXPO_ACCOUNT_OWNER,
   EAS_PROJECT_ID,
+  FACEBOOK_APPID,
+  FACEBOOK_ClIENT_TOKEN,
   // ADD YOUR ENV VARS HERE TOO
   BRANCH_TEST_SDK_KEY: process.env.BRANCH_TEST_SDK_KEY,
   BRANCH_SDK_KEY: process.env.BRANCH_SDK_KEY,

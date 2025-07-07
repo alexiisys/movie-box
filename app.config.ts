@@ -83,6 +83,27 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
+      'expo-tracking-transparency',
+      {
+        userTrackingPermission:
+          'This identifier will be used to deliver personalized ads to you.',
+      },
+    ],
+    [
+      'react-native-fbsdk-next',
+      {
+        appID: Env.FACEBOOK_APPID,
+        clientToken: Env?.FACEBOOK_ClIENT_TOKEN,
+        displayName: Env?.NAME,
+        scheme: `fb${Env?.FACEBOOK_APPID}`,
+        advertiserIDCollectionEnabled: false,
+        autoLogAppEventsEnabled: true,
+        isAutoInitEnabled: true,
+        iosUserTrackingPermission:
+          'This identifier will be used to deliver personalized ads to you.',
+      },
+    ],
+    [
       '@config-plugins/react-native-branch',
       {
         apiKey: Env.BRANCH_SDK_KEY,
