@@ -1,3 +1,4 @@
+export * from './arrow-left';
 export * from './base/arrow-right';
 export * from './base/balance';
 export * from './base/caret-down';
@@ -16,3 +17,8 @@ export * from './base/share';
 export * from './base/style';
 export * from './base/support';
 export * from './base/website';
+export * from './check';
+export * from './edit';
+export * from './globe';
+export * from './grid-list';
+export * from './search';

@@ -1,14 +1,129 @@
-import React from 'react';
+import * as Location from 'expo-location';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import MapView, { type LatLng, Marker } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { FocusAwareStatusBar, SafeAreaView, Text } from '@/components/ui';
+import PlaceModal from '@/components/modals/place-modal';
+import {
+  colors,
+  FocusAwareStatusBar,
+  GridList,
+  Input,
+  Plus,
+  Search,
+  Settings,
+  useModal,
+} from '@/components/ui';
 
+const DEFAULT_LATITUDE_DELTA = 0.0922 / 50;
+const DEFAULT_LONGITUDE_DELTA = 0.0421 / 50;
+
+// eslint-disable-next-line max-lines-per-function
 export default function Contacts() {
+  const insets = useSafeAreaInsets();
+  const [searchValue, setSearchValue] = React.useState<string>('');
+  const router = useRouter();
+  const refMap = useRef<MapView | null>();
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
+  console.log(location);
+  useEffect(() => {
+    refMap.current?.animateToRegion(
+      {
+        latitudeDelta: DEFAULT_LATITUDE_DELTA * 50,
+        longitudeDelta: DEFAULT_LONGITUDE_DELTA * 50,
+        latitude: location?.coords?.latitude ?? 40.73,
+        longitude: location?.coords?.longitude ?? -73.94,
+      },
+      500
+    );
+    console.log({
+      latitudeDelta: DEFAULT_LATITUDE_DELTA * 50,
+      longitudeDelta: DEFAULT_LONGITUDE_DELTA * 50,
+      latitude: location?.coords?.latitude ?? 40.73,
+      longitude: location?.coords?.longitude ?? -73.94,
+    });
+  }, [location]);
+  useEffect(() => {
+    async function getCurrentLocation() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
+  }, []);
+  const [selectedLocation, setSelectedLocation] = React.useState<LatLng | null>(
+    null
+  );
+  console.log(selectedLocation);
+  const refModal = useModal();
   return (
     <>
+      <PlaceModal ref={refModal.ref} />
       <FocusAwareStatusBar />
-      <SafeAreaView className="mt-4 flex-1 gap-4 px-6">
-        <Text>Index</Text>
-      </SafeAreaView>
+      <View className="relative flex-1 bg-lightBlue">
+        <MapView
+          style={{ flex: 1 }}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          ref={(ref) => (refMap.current = ref)}
+          onPress={(event) =>
+            setSelectedLocation({
+              longitude: event.nativeEvent.coordinate.longitude,
+              latitude: event.nativeEvent.coordinate.latitude,
+            })
+          }
+          initialRegion={{
+            latitudeDelta: DEFAULT_LATITUDE_DELTA * 50,
+            longitudeDelta: DEFAULT_LONGITUDE_DELTA * 50,
+            latitude: location?.coords?.latitude ?? 40.73,
+            longitude: location?.coords?.longitude ?? -73.94,
+          }}
+        >
+          {selectedLocation && <Marker coordinate={selectedLocation} />}
+        </MapView>
+        <View
+          className="absolute left-0 flex-row items-center gap-3 px-4"
+          style={{ top: insets.top + 12 }}
+        >
+          <Input
+            className="flex-1"
+            value={searchValue}
+            onChangeText={setSearchValue}
+            placeholder={'Search'}
+            leftIcon={<Search color={colors.grey} />}
+            search
+          />
+          <TouchableOpacity
+            onPress={() => router.navigate('/favorites')}
+            className="items-center justify-center rounded-full bg-white p-3"
+          >
+            <GridList width={24} height={24} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.navigate('/(app)/settings')}
+            className="items-center justify-center rounded-full bg-white p-3"
+          >
+            <Settings width={24} height={24} />
+          </TouchableOpacity>
+        </View>
+        {selectedLocation && (
+          <TouchableOpacity
+            onPress={() => router.navigate('/new-place')}
+            className="absolute bottom-16 right-8 items-center justify-center rounded-full bg-blue p-5"
+          >
+            <Plus width={32} height={32} />
+          </TouchableOpacity>
+        )}
+      </View>
     </>
   );
 }
