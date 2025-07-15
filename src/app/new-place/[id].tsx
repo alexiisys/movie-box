@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { type LatLng } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
@@ -15,49 +16,65 @@ import {
 } from '@/components/ui';
 import { Gallery } from '@/components/ui/icons/gallery';
 import { useSelectedTheme } from '@/lib';
+import { useMapPins } from '@/lib/storage/modules/map-pins';
+import { type Pin } from '@/types/pin';
 
 export const schema = z.object({
   id: z.string(),
-  image: z.string().optional(),
+  image: z.string(),
   name: z.string({ message: 'Required' }),
-  location: z.string().optional(),
-  purpose: z.string().optional(),
-  note: z.string().optional(),
-  start: z.string().optional(),
-  end: z.string().optional(),
-  transportation: z.string().optional(),
-  accommodation: z.string().optional(),
-  budget: z.string().optional(),
-  actualCost: z.string().optional(),
-  attendees: z.string().optional(),
-  status: z.string().optional(),
+  location: z.string(),
+  purpose: z.string(),
+  note: z.string(),
+  start: z.string(),
+  end: z.string(),
+  transportation: z.string(),
+  accommodation: z.string(),
+  budget: z.string(),
+  actualCost: z.string(),
+  attendees: z.string(),
+  status: z.string(),
 });
 export type FormType = z.infer<typeof schema>;
 
 // eslint-disable-next-line max-lines-per-function
-const NewPlace = () => {
+const Id = () => {
   const router = useRouter();
+  const currentPin = useMapPins.use.currentCoord();
+  const pins = useMapPins.use.pins();
+  const filteredPin = useMemo(
+    () => pins.find((item) => item.id === '1'),
+    [pins]
+  );
   const { selectedTheme } = useSelectedTheme();
   const isDark = selectedTheme === 'dark';
-  const { control } = useForm<FormType>({
+  const { control, handleSubmit } = useForm<FormType>({
     defaultValues: {
       id: `place_${Date.now()}`,
-      image: '',
-      name: '',
-      location: '',
-      purpose: '',
-      note: '',
-      start: '',
-      end: '',
-      transportation: '',
-      accommodation: '',
-      budget: '',
-      actualCost: '',
-      attendees: '',
-      status: '',
+      image: filteredPin?.image ?? '',
+      name: filteredPin?.name ?? '',
+      location: filteredPin?.location ?? '',
+      purpose: filteredPin?.purpose ?? '',
+      note: filteredPin?.note ?? '',
+      start: filteredPin?.start ?? '',
+      end: filteredPin?.end ?? '',
+      transportation: filteredPin?.transportation ?? '',
+      accommodation: filteredPin?.accommodation ?? '',
+      budget: filteredPin?.budget ?? '',
+      actualCost: filteredPin?.actualCost ?? '',
+      attendees: filteredPin?.attendees ?? '',
+      status: filteredPin?.status ?? '',
     },
     resolver: zodResolver(schema),
   });
+
+  const onCreateNewPlace = (data: FormType) => {
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    const newPin: Pin = {
+      coord: currentPin as LatLng,
+      ...data,
+    };
+  };
   return (
     <SafeAreaView className="flex-1 gap-4 p-4">
       <View className="flex-row items-center">
@@ -126,10 +143,10 @@ const NewPlace = () => {
           />
           <ControlledInput name={'status'} control={control} label={'Status'} />
         </View>
-        <Button label={'Save'} />
+        <Button label={'Save'} onPress={handleSubmit(onCreateNewPlace)} />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default NewPlace;
+export default Id;

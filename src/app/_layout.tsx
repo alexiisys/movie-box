@@ -39,7 +39,7 @@ export default function RootLayout() {
     <Providers>
       <Stack>
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        <Stack.Screen name="new-place" options={{ headerShown: false }} />
+        <Stack.Screen name="new-place/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="favorites" options={{ headerShown: false }} />
       </Stack>
     </Providers>

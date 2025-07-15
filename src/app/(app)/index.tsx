@@ -16,6 +16,7 @@ import {
   Settings,
   useModal,
 } from '@/components/ui';
+import { setCurrentCoord, useMapPins } from '@/lib/storage/modules/map-pins';
 
 const DEFAULT_LATITUDE_DELTA = 0.0922 / 50;
 const DEFAULT_LONGITUDE_DELTA = 0.0421 / 50;
@@ -29,7 +30,7 @@ export default function Contacts() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
-  console.log(location);
+  const pins = useMapPins.use.pins();
   useEffect(() => {
     refMap.current?.animateToRegion(
       {
@@ -63,7 +64,11 @@ export default function Contacts() {
   const [selectedLocation, setSelectedLocation] = React.useState<LatLng | null>(
     null
   );
-  console.log(selectedLocation);
+
+  const onNewPlace = () => {
+    setCurrentCoord(location?.coords as LatLng);
+    router.navigate('/new-place/new');
+  };
   const refModal = useModal();
   return (
     <>
@@ -89,6 +94,9 @@ export default function Contacts() {
           }}
         >
           {selectedLocation && <Marker coordinate={selectedLocation} />}
+          {pins.map((pin) => (
+            <Marker coordinate={pin.coord} />
+          ))}
         </MapView>
         <View
           className="absolute left-0 flex-row items-center gap-3 px-4"
@@ -117,7 +125,7 @@ export default function Contacts() {
         </View>
         {selectedLocation && (
           <TouchableOpacity
-            onPress={() => router.navigate('/new-place')}
+            onPress={onNewPlace}
             className="absolute bottom-16 right-8 items-center justify-center rounded-full bg-blue p-5"
           >
             <Plus width={32} height={32} />
