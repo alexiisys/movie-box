@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import MapView, { type LatLng, Marker } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,6 +17,7 @@ import {
   useModal,
 } from '@/components/ui';
 import { setCurrentCoord, useMapPins } from '@/lib/storage/modules/map-pins';
+import { type Pin } from '@/types/pin';
 
 const DEFAULT_LATITUDE_DELTA = 0.0922 / 50;
 const DEFAULT_LONGITUDE_DELTA = 0.0421 / 50;
@@ -31,6 +32,10 @@ export default function Contacts() {
     null
   );
   const pins = useMapPins.use.pins();
+  const filteredPins = useMemo(
+    () => pins.filter((pin) => pin.name.includes(searchValue.toLowerCase())),
+    [pins, searchValue]
+  );
   useEffect(() => {
     refMap.current?.animateToRegion(
       {
@@ -64,15 +69,19 @@ export default function Contacts() {
   const [selectedLocation, setSelectedLocation] = React.useState<LatLng | null>(
     null
   );
-
+  const [selectPin, setSelectPin] = React.useState<Pin | null>(null);
   const onNewPlace = () => {
-    setCurrentCoord(location?.coords as LatLng);
+    setCurrentCoord(selectedLocation as LatLng);
     router.navigate('/new-place/new');
   };
   const refModal = useModal();
   return (
     <>
-      <PlaceModal ref={refModal.ref} />
+      <PlaceModal
+        pin={selectPin!}
+        close={() => refModal.dismiss()}
+        ref={refModal.ref}
+      />
       <FocusAwareStatusBar />
       <View className="relative flex-1 bg-lightBlue">
         <MapView
@@ -93,10 +102,35 @@ export default function Contacts() {
             longitude: location?.coords?.longitude ?? -73.94,
           }}
         >
-          {selectedLocation && <Marker coordinate={selectedLocation} />}
-          {pins.map((pin) => (
-            <Marker coordinate={pin.coord} />
-          ))}
+          {selectedLocation && (
+            <Marker
+              coordinate={selectedLocation}
+              icon={require('../../../assets/pin.png')}
+            />
+          )}
+          {filteredPins.map((pin) =>
+            pin.activate ? (
+              <Marker
+                coordinate={pin.coord}
+                key={pin.id}
+                icon={require('../../../assets/pin_check.png')}
+                onPress={() => {
+                  setSelectPin(pin);
+                  refModal.present();
+                }}
+              />
+            ) : (
+              <Marker
+                coordinate={pin.coord}
+                key={pin.id}
+                onPress={() => {
+                  setSelectPin(pin);
+                  refModal.present();
+                }}
+                icon={require('../../../assets/pin_.png')}
+              />
+            )
+          )}
         </MapView>
         <View
           className="absolute left-0 flex-row items-center gap-3 px-4"

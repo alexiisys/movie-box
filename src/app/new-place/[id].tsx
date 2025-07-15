@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
+import { launchImageLibraryAsync } from 'expo-image-picker';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { type LatLng } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,13 +11,16 @@ import { z } from 'zod';
 import {
   ArrowLeft,
   Button,
+  Close,
   colors,
   ControlledInput,
+  Image,
   Text,
 } from '@/components/ui';
 import { Gallery } from '@/components/ui/icons/gallery';
 import { useSelectedTheme } from '@/lib';
-import { useMapPins } from '@/lib/storage/modules/map-pins';
+import { addPin, updatePin, useMapPins } from '@/lib/storage/modules/map-pins';
+import { deleteImage, saveImagePermanently } from '@/lib/utils/image-manager';
 import { type Pin } from '@/types/pin';
 
 export const schema = z.object({
@@ -40,11 +44,12 @@ export type FormType = z.infer<typeof schema>;
 // eslint-disable-next-line max-lines-per-function
 const Id = () => {
   const router = useRouter();
+  const local = useLocalSearchParams<{ id: string }>();
   const currentPin = useMapPins.use.currentCoord();
   const pins = useMapPins.use.pins();
   const filteredPin = useMemo(
-    () => pins.find((item) => item.id === '1'),
-    [pins]
+    () => pins.find((item) => item.id === local.id),
+    [local.id, pins]
   );
   const { selectedTheme } = useSelectedTheme();
   const isDark = selectedTheme === 'dark';
@@ -68,12 +73,34 @@ const Id = () => {
     resolver: zodResolver(schema),
   });
 
-  const onCreateNewPlace = (data: FormType) => {
-    // eslint-disable-next-line unused-imports/no-unused-vars
+  const onCreateNewPlace = async ({ image, ...data }: FormType) => {
+    if (image !== filteredPin?.image) {
+      await deleteImage(filteredPin?.image || '');
+    }
+
+    const savedUri =
+      image === filteredPin?.image
+        ? (filteredPin?.image ?? '')
+        : await saveImagePermanently(image);
+
     const newPin: Pin = {
       coord: currentPin as LatLng,
+      image: savedUri,
+      activate: false,
       ...data,
     };
+    if (filteredPin) {
+      updatePin(newPin);
+    } else {
+      addPin(newPin);
+    }
+    router.back();
+  };
+  const onPickImage = async (onChange: (arg0: string) => void) => {
+    const result = await launchImageLibraryAsync();
+    if (!result.canceled) {
+      onChange(result.assets[0].uri);
+    }
   };
   return (
     <SafeAreaView className="flex-1 gap-4 p-4">
@@ -90,9 +117,41 @@ const Id = () => {
       >
         <View className="gap-4">
           <Text className="text-xl">Main</Text>
-          <View className="flex-row items-center justify-center rounded-xl bg-lightGrey py-12 dark:bg-charcoal-800">
-            <Gallery />
-          </View>
+
+          <Controller
+            name={'image'}
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <TouchableOpacity
+                onPress={() => onPickImage(onChange)}
+                className="  bg-lightGrey  dark:bg-charcoal-800"
+              >
+                {value ? (
+                  <View className={'relative'}>
+                    <Image
+                      className="h-40 w-full rounded-xl"
+                      contentFit={'cover'}
+                      source={{
+                        uri: value,
+                      }}
+                    />
+                    <TouchableOpacity
+                      onPress={() => onChange('')}
+                      className={
+                        'absolute right-3 top-3 rounded-2xl bg-black p-1  dark:bg-white'
+                      }
+                    >
+                      <Close color={colors.grey} width={20} height={20} />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View className="flex-row items-center justify-center py-12">
+                    <Gallery />
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
+          />
           <ControlledInput name={'name'} control={control} label={'Name'} />
           <ControlledInput
             name={'location'}

@@ -59,3 +59,4 @@ export const setCurrentCoord = _useMapPins.getState().setCurrentCoord;
 export const updatePin = _useMapPins.getState().updatePins;
 export const addPin = _useMapPins.getState().addPins;
 export const deletePin = _useMapPins.getState().deletePins;
+export const readPins = _useMapPins.getState().readPins;

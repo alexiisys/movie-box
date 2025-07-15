@@ -33,7 +33,7 @@ const inputTv = tv({
       true: {
         input: 'text-lg text-black',
         inputContainer:
-          'items-center rounded-3xl bg-white p-4 dark:bg-darkBgTrans',
+          'items-center rounded-3xl bg-white p-4 shadow-lg dark:bg-darkBgTrans',
       },
     },
     focused: {

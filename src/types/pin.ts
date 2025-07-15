@@ -5,6 +5,7 @@ export type Pin = {
   image: string;
   name: string;
   coord: LatLng;
+  activate: boolean;
   location: string;
   purpose: string;
   note: string;

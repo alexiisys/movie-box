@@ -17,6 +17,7 @@ import { APIProvider } from '@/api';
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
 import { readSettings } from '@/lib/storage';
+import { readPins } from '@/lib/storage/modules/map-pins';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
 export { ErrorBoundary } from 'expo-router';
@@ -59,6 +60,7 @@ function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     readSettings();
     faceBookInit();
+    readPins();
   });
   return (
     <GestureHandlerRootView
