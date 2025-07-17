@@ -29,8 +29,8 @@ require('dotenv').config({
 const BUNDLE_ID = 'com.base.app'; // ios bundle id TODO
 const PACKAGE = 'com.base.app'; // android package name TODO
 const NAME = 'BASE'; // app name  TODO
-const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner TODO
-const EAS_PROJECT_ID = 'c3e1079b-6fe7-4686-7a49-35b4666a6229044'; // eas project id TODO
+const EXPO_ACCOUNT_OWNER = 'david.appdev.info'; // expo account owner TODO
+const EAS_PROJECT_ID = ''; // eas project id TODO
 const SCHEME = 'base'; // app scheme TODO
 
 const PRIVACY_POLICY =
