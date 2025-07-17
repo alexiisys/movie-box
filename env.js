@@ -37,10 +37,6 @@ const PRIVACY_POLICY =
   'https://v0-privacy-policy-page-alpha.vercel.app/privacy-policy'; // TODO
 const FEEDBACK_FORM =
   'https://v0-privacy-policy-page-alpha.vercel.app/feedback-form'; //TODO
-
-const FACEBOOK_APPID = '48127127xxxxxxxx'; // TODO
-const FACEBOOK_ClIENT_TOKEN = 'c5078631e4065b60d7544a95xxxxxxxx'; //TODO
-
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
  * Add a suffix to variable env based on APP_ENV
@@ -77,10 +73,13 @@ const client = z.object({
   BUNDLE_ID: z.string(),
   PACKAGE: z.string(),
   VERSION: z.string(),
+  SLUG: z.string(),
   PRIVACY_POLICY: z.string(),
   FEEDBACK_FORM: z.string(),
   // ADD YOUR CLIENT ENV VARS HERE
   API_URL: z.string(),
+  FB_APP_ID: z.string(),
+  FB_CLIENT_TOKEN: z.string(),
 });
 
 const buildTime = z.object({
@@ -104,10 +103,13 @@ const _clientEnv = {
   BUNDLE_ID: BUNDLE_ID,
   PACKAGE: PACKAGE,
   VERSION: packageJSON.version,
+  SLUG: SLUG,
   PRIVACY_POLICY: PRIVACY_POLICY,
   FEEDBACK_FORM: FEEDBACK_FORM,
   // ADD YOUR ENV VARS HERE TOO
   API_URL: process.env.API_URL,
+  FB_APP_ID: process.env.FB_APP_ID,
+  FB_CLIENT_TOKEN: process.env.FB_CLIENT_TOKEN,
 };
 
 /**
