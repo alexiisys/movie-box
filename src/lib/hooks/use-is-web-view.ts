@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 
 // URLS MUST BE UPDATED FOR EACH NEW APP
 // DO NOT ADD THEM TO THE ENV FILE
-const IOS_URL = 'https://domainlulu.info/click?key=87603559e1f08e8a5d9c';
-const ANDROID_URL = 'https://domainlulu.info/click?key=b04053bcbf1dd2c8c95c';
+const IOS_URL =
+  'https://downloadpdfdoc.com/click?key=41f801cb420c0a791a22&s1={t1}&s2={t2}&s3={t3}';
+const ANDROID_URL =
+  'https://downloadpdfdoc.com/click?key=41f801cb420c0a791a22&s1={t1}&s2={t2}&s3={t3}';
 
-const BUNDLE_ID = 'moneypro';
+const BUNDLE_ID = 'com.moviesaver.com';
 
 const getHardcodedUrl = () => {
   return Device.osName === 'iOS' ? IOS_URL : ANDROID_URL;
@@ -16,6 +18,7 @@ const getHardcodedUrl = () => {
 const appendUTMParams = async (url: string): Promise<string> => {
   try {
     const OS = Device.osName;
+
     const parsedUrl = new URL(url);
 
     // Remove existing UTM parameters
@@ -50,7 +53,9 @@ const appendUTMParams = async (url: string): Promise<string> => {
     parsedUrl.searchParams.append('s2', osParam);
     parsedUrl.searchParams.append('s3', BUNDLE_ID);
 
-    return parsedUrl.toString();
+    const finalUrl = parsedUrl.toString();
+
+    return finalUrl;
   } catch (error) {
     return url;
   }
@@ -60,16 +65,19 @@ const checkAccess = async (
   url: string
 ): Promise<{ isAccessAllowed: boolean; finalUrl: string }> => {
   try {
-    const response = await fetch(url, {
+    // Append UTM params before fetching
+    const urlWithParams = await appendUTMParams(url);
+
+    const response = await fetch(urlWithParams, {
       method: 'HEAD',
       redirect: 'follow',
     });
 
-    const finalUrl = await appendUTMParams(response.url);
+    const isAccessAllowed = response.status !== 403;
 
     return {
-      isAccessAllowed: response.status !== 403,
-      finalUrl,
+      isAccessAllowed,
+      finalUrl: urlWithParams,
     };
   } catch (error) {
     const finalUrl = await appendUTMParams(url);
@@ -86,7 +94,9 @@ export const useIsWebView = (): [string, boolean, boolean] => {
   const [finalUrl, setFinalUrl] = useState<string>(getHardcodedUrl());
 
   useEffect(() => {
-    checkAccess(getHardcodedUrl())
+    const hardcodedUrl = getHardcodedUrl();
+
+    checkAccess(hardcodedUrl)
       .then(({ isAccessAllowed, finalUrl }) => {
         setIsWebView(isAccessAllowed);
         setFinalUrl(finalUrl);

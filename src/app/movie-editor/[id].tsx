@@ -19,6 +19,7 @@ import { ArrowLeft, Close, Gallery, Star } from '@/components/ui/icons';
 import { MovieGenres } from '@/lib/consts';
 import { addMovie, updateMovie, useMovie } from '@/lib/storage';
 import { deleteImage, saveImagePermanently } from '@/lib/utils/image-manager';
+import { trackMovieEvent } from '@/lib/facebook-attribution';
 import { type Movie } from '@/types';
 
 const schema = z.object({
@@ -106,11 +107,22 @@ const Id = () => {
       actors: value.actor_object?.array ?? [],
       genres: value.genres ?? [],
     };
-    if (movie) {
-      updateMovie(new_movie);
-    } else {
+    
+    // Track Facebook attribution event
+    const isNewMovie = !movie;
+    if (isNewMovie) {
       addMovie(new_movie);
+      // Track movie added event for attribution
+      await trackMovieEvent('added', {
+        movieId: new_movie.id,
+        movieTitle: new_movie.title,
+        rating: new_movie.rating,
+        genre: new_movie.genres?.[0] || 'unknown',
+      });
+    } else {
+      updateMovie(new_movie);
     }
+    
     router.back();
   };
 

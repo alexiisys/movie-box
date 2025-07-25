@@ -11,6 +11,7 @@ import { Plus, Search } from '@/components/ui/icons';
 import { Star } from '@/components/ui/icons/star';
 import { TrashCan } from '@/components/ui/icons/trash-can';
 import { MovieGenres } from '@/lib/consts';
+import { trackSearch } from '@/lib/facebook-attribution';
 import { type Movie } from '@/types';
 
 export default function Contacts() {
@@ -95,6 +96,23 @@ export default function Contacts() {
     setTimeout(() => searchRef?.current?.focus(), 100);
   }, [searchIsVisible]);
   const [searchValue, setSearchValue] = React.useState<string>('');
+  
+  // Track search events for Facebook attribution
+  const searchTimeoutRef = React.useRef<NodeJS.Timeout>();
+  const trackSearchEvent = React.useCallback((searchTerm: string) => {
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Track search after 500ms delay (debounced)
+    if (searchTerm.length > 2) {
+      searchTimeoutRef.current = setTimeout(() => {
+        trackSearch(searchTerm);
+      }, 500);
+    }
+  }, []);
+  
   const filteredMovies: Movie[] = React.useMemo(
     () =>
       movies.filter((movie) =>
@@ -138,7 +156,10 @@ export default function Contacts() {
             className="flex-1 text-white "
             ref={searchRef}
             value={searchValue}
-            onChangeText={(text) => setSearchValue(text)}
+            onChangeText={(text) => {
+              setSearchValue(text);
+              trackSearchEvent(text);
+            }}
             onBlur={() => setSearchIsVisible(searchValue.length !== 0)}
             leftIcon={<Search color={'white'} />}
             search

@@ -27,26 +27,17 @@ require('dotenv').config({
 // TODO: Replace these values with your own
 
 
-const BUNDLE_ID = 'com.moviesaver'; // ios bundle id
-const PACKAGE = 'com.moviesaver'; // android package name
+const BUNDLE_ID = 'com.moviesaver.com'; // ios bundle id
+const PACKAGE = 'com.moviesaver.com'; // android package name
 const NAME = 'Movie Saver+'; // app name
-const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner
-const EAS_PROJECT_ID = 'c3e1075b-6fe7-4686-aa49-35b46a229044'; // eas project id
+const EXPO_ACCOUNT_OWNER = 'david.appdev.info'; // expo account owner
+const EAS_PROJECT_ID = '47fc5e1e-24e1-4f18-89f3-0fd8fa8e75fe'; // eas project id
 const SCHEME = 'MovieSaver'; // app scheme
 const PRIVACY_POLICY = 'https://v0-movie-psi.vercel.app/privacy-policy'; // app scheme
 const FEEDBACK_FORM = 'https://v0-movie-psi.vercel.app/feedback-form'; // app scheme
-const FACEBOOK_APPID = '48127127xxxxxxxx'; // TODO
-const FACEBOOK_ClIENT_TOKEN = 'c5078631e4065b60d7544a95xxxxxxxx'; //TODO
-/**
- * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
- * Add a suffix to variable env based on APP_ENV
- * @param {string} name
- * @returns  {string}
- */
+const FACEBOOK_APPID = '1237056204566860'; // TODO
+const FACEBOOK_ClIENT_TOKEN = '8fd6d5b13a7901a90328e2cb91d0e418'; //TODO
 
-const withEnvSuffix = (name) => {
-  return APP_ENV === 'production' ? name : `${name}.${APP_ENV}`;
-};
 
 /**
  * 2nd part: Define your env variables schema
@@ -153,5 +144,4 @@ const ClientEnv = client.parse(_clientEnv);
 module.exports = {
   Env,
   ClientEnv,
-  withEnvSuffix,
 };

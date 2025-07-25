@@ -26,7 +26,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   description: `${Env.NAME} Mobile App`,
   owner: Env.EXPO_ACCOUNT_OWNER,
   scheme: Env.SCHEME,
-  slug: 'applink',
+  slug: 'movie-saver',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -40,10 +40,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: Env.BUNDLE_ID,
-    buildNumber: '1',
+    buildNumber: '7',
     associatedDomains: [
-      'applinks:8wxde.app.link',
-      'applinks:8wxde-alternate.app.link',
+      'applinks:q8tf7.app.link',
+      'applinks:q8tf7-alternate.app.link',
     ],
     config: {
       usesNonExemptEncryption: false, // Avoid the export compliance warning on the app store
@@ -83,30 +83,23 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
-      'expo-tracking-transparency',
+      '@config-plugins/react-native-branch',
       {
-        userTrackingPermission:
-          'This identifier will be used to deliver personalized ads to you.',
+        apiKey: Env.BRANCH_SDK_KEY,
+        iosAppDomain: 'q8tf7.app.link',
       },
     ],
     [
       'react-native-fbsdk-next',
       {
         appID: Env.FACEBOOK_APPID,
-        clientToken: Env?.FACEBOOK_ClIENT_TOKEN,
-        displayName: Env?.NAME,
-        scheme: `fb${Env?.FACEBOOK_APPID}`,
-        advertiserIDCollectionEnabled: false,
-        autoLogAppEventsEnabled: true,
-        isAutoInitEnabled: true,
-        iosUserTrackingPermission:
-          'This identifier will be used to deliver personalized ads to you.',
-      },
-    ],
-    [
-      '@config-plugins/react-native-branch',
-      {
-        apiKey: Env.BRANCH_SDK_KEY,
+        clientToken: Env.FACEBOOK_ClIENT_TOKEN,
+        displayName: Env.NAME,
+        scheme: `fb${Env.FACEBOOK_APPID}`,
+        advertiserIDCollectionEnabled: true, // Enable for install attribution
+        autoLogAppEventsEnabled: true, // Enable for automatic event logging
+        isAutoInitEnabled: true, // Enable for automatic initialization
+        iosUserTrackingPermission: false, // Disable to avoid NSUserTrackingUsageDescription
       },
     ],
     [

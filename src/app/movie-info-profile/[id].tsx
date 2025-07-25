@@ -9,6 +9,7 @@ import { ArrowLeft, Pen, Star, TrashCan } from '@/components/ui/icons';
 import DeleteModal from '@/components/ui/modal/delete-modal';
 import { deleteMovie, useMovie } from '@/lib/storage';
 import { deleteImage } from '@/lib/utils/image-manager';
+import { trackMovieEvent, trackContentView } from '@/lib/facebook-attribution';
 
 export default function FilmInfo() {
   const local = useLocalSearchParams<{ id: string }>();
@@ -29,6 +30,25 @@ export default function FilmInfo() {
     deleteMovie(local.id);
     router.back();
   };
+
+  // Track movie view for Facebook attribution
+  React.useEffect(() => {
+    if (movie) {
+      // Track movie viewed event
+      trackMovieEvent('viewed', {
+        movieId: movie.id,
+        movieTitle: movie.title,
+        rating: movie.rating,
+        genre: movie.genres?.[0] || 'unknown',
+      });
+      
+      // Track content view event
+      trackContentView({
+        contentType: 'movie',
+        contentId: movie.id,
+      });
+    }
+  }, [movie]);
   return (
     <View className="flex-1 ">
       <Stack.Screen options={{ headerShown: false }} />
