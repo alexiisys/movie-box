@@ -25,8 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: Env.NAME,
   description: `${Env.NAME} Mobile App`,
   owner: Env.EXPO_ACCOUNT_OWNER,
-  scheme: Env.SCHEME,
-  slug: Env.SLUG',
+  slug: Env.BUNDLE_ID.replace(/\./g, '') || 'base-app',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -40,20 +39,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: Env.BUNDLE_ID,
-    buildNumber: '1',
+    buildNumber: Env.BUILD_NUMBER,
     associatedDomains: [
-      'applinks:8wxde.app.link',
-      'applinks:8wxde-alternate.app.link',
+      `applinks:${Env.IOS_APP_DOMAIN}`,
+      `applinks:${Env.IOS_APP_DOMAIN.replace('.app.link', '-alternate.app.link')}`,
     ],
     config: {
-      usesNonExemptEncryption: false, // Avoid the export compliance warning on the app store
+      usesNonExemptEncryption: false, 
     },
   },
   experiments: {
     typedRoutes: true,
   },
   android: {
-    versionCode: 1,
+    versionCode: parseInt(Env.BUILD_NUMBER, 10),
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#2E3C4B',
@@ -66,11 +65,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         data: [
           {
             scheme: 'https',
-            host: '8wxde.app.link',
+            host: Env.IOS_APP_DOMAIN,
           },
           {
             scheme: 'https',
-            host: '8wxde-alternate.app.link',
+            host: Env.IOS_APP_DOMAIN.replace('.app.link', '-alternate.app.link'),
           },
         ],
         category: ['BROWSABLE', 'DEFAULT'],
@@ -83,30 +82,22 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
-      'expo-tracking-transparency',
-      {
-        userTrackingPermission:
-          'This identifier will be used to deliver personalized ads to you.',
-      },
-    ],
-    [
       'react-native-fbsdk-next',
       {
-        appID: Env.FACEBOOK_APPID,
-        clientToken: Env?.FACEBOOK_ClIENT_TOKEN,
-        displayName: Env?.NAME,
-        scheme: `fb${Env?.FACEBOOK_APPID}`,
-        advertiserIDCollectionEnabled: false,
+        appID: Env.FB_APP_ID,
+        clientToken: Env.FB_CLIENT_TOKEN,
+        displayName: Env.NAME,
+        scheme: `fb${Env.FB_APP_ID}`,
+        advertiserIDCollectionEnabled: true,
         autoLogAppEventsEnabled: true,
         isAutoInitEnabled: true,
-        iosUserTrackingPermission:
-          'This identifier will be used to deliver personalized ads to you.',
       },
     ],
     [
       '@config-plugins/react-native-branch',
       {
-        apiKey: Env.BRANCH_SDK_KEY,
+        apiKey: Env.BRANCH_LIVE_KEY,
+        iosAppDomain: Env.IOS_APP_DOMAIN,
       },
     ],
     [
@@ -146,6 +137,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   extra: {
     ...ClientEnv,
+    IOS_URL: Env.IOS_URL,
+    ANDROID_URL: Env.ANDROID_URL,
     eas: {
       projectId: Env.EAS_PROJECT_ID,
     },

@@ -13,7 +13,6 @@ import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
-import { APIProvider } from '@/api';
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
 import { readSettings } from '@/lib/storage';
@@ -65,14 +64,12 @@ function Providers({ children }: { children: React.ReactNode }) {
     >
       <KeyboardProvider>
         <ThemeProvider value={theme}>
-          <APIProvider>
-            <BottomSheetModalProvider>
-              <AppLinkWrapper loader={<Text>Loading...</Text>}>
-                {children}
-              </AppLinkWrapper>
-              <FlashMessage position="top" />
-            </BottomSheetModalProvider>
-          </APIProvider>
+          <BottomSheetModalProvider>
+            <AppLinkWrapper loader={<Text>Loading...</Text>}>
+              {children}
+            </AppLinkWrapper>
+            <FlashMessage position="top" />
+          </BottomSheetModalProvider>
         </ThemeProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>
