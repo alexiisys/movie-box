@@ -5,16 +5,19 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
+import {
+  initializeFacebookAttribution,
+  trackAppLaunch,
+  trackInstallAttribution,
+} from '@/lib/attribution';
 import { readSettings } from '@/lib/storage';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
@@ -45,18 +48,38 @@ export default function RootLayout() {
 
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
+  const [isFirstTime, setIsFirstTime] = useState(true);
 
-  const faceBookInit = async () => {
-    const { status } = await requestTrackingPermissionsAsync();
-    Settings.initializeSDK();
-    if (status === 'granted') {
-      await Settings.setAdvertiserTrackingEnabled(true);
-    }
-  };
   useEffect(() => {
     readSettings();
-    faceBookInit();
-  });
+
+    // Track install attribution only on first launch
+    const handleInstallAttribution = async () => {
+      if (isFirstTime) {
+        try {
+          await initializeFacebookAttribution();
+          await trackInstallAttribution();
+          setIsFirstTime(false);
+          console.log('Install attribution completed');
+        } catch (error) {
+          console.warn('Install attribution failed:', error);
+        }
+      }
+    };
+
+    // Track app launch on every launch
+    const handleAppLaunch = async () => {
+      try {
+        await trackAppLaunch();
+      } catch (error) {
+        console.warn('App launch tracking failed:', error);
+      }
+    };
+
+    handleInstallAttribution();
+    handleAppLaunch();
+  }, [isFirstTime]);
+
   return (
     <GestureHandlerRootView
       style={styles.container}
