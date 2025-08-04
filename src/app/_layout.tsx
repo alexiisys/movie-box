@@ -5,16 +5,18 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
+import {
+  initializeFacebookAttribution,
+  trackAppLaunch,
+} from '@/lib/attribution';
 import { readSettings } from '@/lib/storage';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
@@ -25,13 +27,7 @@ export const unstable_settings = {
 };
 
 loadSelectedTheme();
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-// Set the animation options. This is optional.
-SplashScreen.setOptions({
-  duration: 500,
-  fade: true,
-});
 
 export default function RootLayout() {
   return (
@@ -46,16 +42,12 @@ export default function RootLayout() {
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
 
-  const faceBookInit = async () => {
-    const { status } = await requestTrackingPermissionsAsync();
-    Settings.initializeSDK();
-    if (status === 'granted') {
-      await Settings.setAdvertiserTrackingEnabled(true);
-    }
-  };
   useEffect(() => {
     readSettings();
-    faceBookInit();
+
+    // Initialize Facebook attribution tracking without requesting permissions
+    initializeFacebookAttribution();
+    trackAppLaunch();
   });
   return (
     <GestureHandlerRootView
