@@ -45,8 +45,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       `applinks:${Env.IOS_APP_DOMAIN.replace('.app.link', '-alternate.app.link')}`,
     ],
     config: {
-      googleMapsApiKey: 'AIzaSyAlxWBGpPEc1jrONo7CHp4l2vd5KiR7SQs',
-      usesNonExemptEncryption: false, // Avoid the export compliance warning on the app store
+      usesNonExemptEncryption: false, 
     },
   },
   experiments: {
@@ -57,11 +56,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#2E3C4B',
-    },
-    config: {
-      googleMaps: {
-        apiKey: 'AIzaSyAlxWBGpPEc1jrONo7CHp4l2vd5KiR7SQs',
-      },
     },
     package: Env.PACKAGE,
     intentFilters: [
@@ -87,12 +81,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundler: 'metro',
   },
   plugins: [
-    [
-      'expo-location',
-      {
-        locationAlwaysAndWhenInUsePermission: 'Allow to use your location.',
-      },
-    ],
     [
       'react-native-fbsdk-next',
       {

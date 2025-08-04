@@ -1,4 +1,3 @@
-import { Env } from '@env';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
 import { useEffect } from 'react';
@@ -29,7 +28,7 @@ export default function AppLinkWrapper({
   //   return _loader;
   // }
 
-  if (webview && Env.APP_ENV !== 'development') {
+  if (webview) {
     return (
       <View style={{ flex: 1 }}>
         <WebView source={{ uri }} style={{ flex: 1 }} />

@@ -1,16 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {
-  ArrowLeft,
-  Button,
-  FocusAwareStatusBar,
-  Switch,
-  Text,
-} from '@/components/ui';
+import { Button, FocusAwareStatusBar, Switch, Text } from '@/components/ui';
 import { useSelectedTheme } from '@/lib';
 import { Env } from '@/lib/env';
 import { openLinkInBrowser } from '@/lib/utils';
@@ -19,7 +12,6 @@ export default function Settings() {
   const { selectedTheme, setSelectedTheme } = useSelectedTheme();
   const isDark = selectedTheme === 'dark';
   const switchTheme = () => setSelectedTheme(isDark ? 'light' : 'dark');
-  const router = useRouter();
 
   const openPrivacyPolicy = () => openLinkInBrowser(Env.PRIVACY_POLICY);
 
@@ -30,12 +22,7 @@ export default function Settings() {
 
       <SafeAreaView className=" mt-4 flex-1 px-6">
         <View className="relative flex-1 gap-10">
-          <View className="flex-row items-center gap-8">
-            <TouchableOpacity onPress={() => router.back()}>
-              <ArrowLeft />
-            </TouchableOpacity>
-            <Text className="font-exo2Bold text-2xl">Settings</Text>
-          </View>
+          <Text className="font-exo2Bold text-2xl">Settings</Text>
           <Switch
             checked={isDark}
             onChange={switchTheme}

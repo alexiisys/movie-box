@@ -90,7 +90,7 @@ export const Modal = React.forwardRef(
       () => (
         <>
           <View className="mb-8 mt-2 h-1 w-12 self-center rounded-lg bg-gray-400 dark:bg-gray-700" />
-          {title && <ModalHeader title={title} dismiss={modal.dismiss} />}
+          <ModalHeader title={title} dismiss={modal.dismiss} />
         </>
       ),
       [title, modal.dismiss]
