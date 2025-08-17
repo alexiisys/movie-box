@@ -45,7 +45,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       `applinks:${Env.IOS_APP_DOMAIN.replace('.app.link', '-alternate.app.link')}`,
     ],
     config: {
-      usesNonExemptEncryption: false, 
+      usesNonExemptEncryption: false,
+    },
+    infoPlist: {
+      SKAdNetworkItems: [
+        {
+          SKAdNetworkIdentifier: '238da6jt44.skadnetwork',
+        },
+      ],
     },
   },
   experiments: {
@@ -69,7 +76,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           },
           {
             scheme: 'https',
-            host: Env.IOS_APP_DOMAIN.replace('.app.link', '-alternate.app.link'),
+            host: Env.IOS_APP_DOMAIN.replace(
+              '.app.link',
+              '-alternate.app.link'
+            ),
           },
         ],
         category: ['BROWSABLE', 'DEFAULT'],
