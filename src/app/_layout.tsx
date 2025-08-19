@@ -17,9 +17,13 @@ import {
 } from 'src/lib/facebook-attribution';
 import { readMovies } from 'src/lib/storage/modules/movies';
 
-import { APIProvider } from '@/api';
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
 import { loadSelectedTheme } from '@/lib';
+import {
+  initializeFacebookAttribution,
+  trackAppLaunch,
+} from '@/lib/attribution';
+import { readSettings } from '@/lib/storage';
 import { useThemeConfig } from '@/lib/use-theme-config';
 
 export { ErrorBoundary } from 'expo-router';
@@ -29,13 +33,7 @@ export const unstable_settings = {
 };
 
 loadSelectedTheme();
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-// Set the animation options. This is optional.
-SplashScreen.setOptions({
-  duration: 500,
-  fade: true,
-});
 
 export default function RootLayout() {
   return (
@@ -50,21 +48,14 @@ export default function RootLayout() {
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
 
-  const initializeApp = async () => {
-    // Initialize Facebook attribution tracking
-    await initializeFacebookAttribution();
-
-    // Track app launch and first open
-    await trackAppLaunch();
-    await trackFirstAppOpen();
-
-    // Load movies data
-    readMovies();
-  };
-
   useEffect(() => {
-    initializeApp();
-  }, []);
+    readSettings();
+
+    readMovies();
+    // Initialize Facebook attribution tracking without requesting permissions
+    initializeFacebookAttribution();
+    trackAppLaunch();
+  });
   return (
     <GestureHandlerRootView
       style={styles.container}
@@ -72,14 +63,12 @@ function Providers({ children }: { children: React.ReactNode }) {
     >
       <KeyboardProvider>
         <ThemeProvider value={theme}>
-          <APIProvider>
-            <BottomSheetModalProvider>
-              <AppLinkWrapper loader={<Text>Loading...</Text>}>
-                {children}
-              </AppLinkWrapper>
-              <FlashMessage position="top" />
-            </BottomSheetModalProvider>
-          </APIProvider>
+          <BottomSheetModalProvider>
+            <AppLinkWrapper loader={<Text>Loading...</Text>}>
+              {children}
+            </AppLinkWrapper>
+            <FlashMessage position="top" />
+          </BottomSheetModalProvider>
         </ThemeProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>
