@@ -7,9 +7,9 @@ import { Button, colors, Image, Text, useModal, View } from '@/components/ui';
 import Chips from '@/components/ui/chip/сhips';
 import { ArrowLeft, Pen, Star, TrashCan } from '@/components/ui/icons';
 import DeleteModal from '@/components/ui/modal/delete-modal';
+import { trackContentView, trackMovieEvent } from '@/lib/facebook-attribution';
 import { deleteMovie, useMovie } from '@/lib/storage';
 import { deleteImage } from '@/lib/utils/image-manager';
-import { trackMovieEvent, trackContentView } from '@/lib/facebook-attribution';
 
 export default function FilmInfo() {
   const local = useLocalSearchParams<{ id: string }>();
@@ -41,7 +41,7 @@ export default function FilmInfo() {
         rating: movie.rating,
         genre: movie.genres?.[0] || 'unknown',
       });
-      
+
       // Track content view event
       trackContentView({
         contentType: 'movie',
@@ -53,7 +53,7 @@ export default function FilmInfo() {
     <View className="flex-1 ">
       <Stack.Screen options={{ headerShown: false }} />
       <View
-        className="flex-row items-center justify-between rounded-b-3xl bg-white px-5 pb-4"
+        className="bg-color1 flex-row items-center justify-between rounded-b-3xl px-5 pb-4"
         style={{ paddingTop: insets.top + 8 }}
       >
         <Pressable onPress={onPress}>
@@ -64,24 +64,24 @@ export default function FilmInfo() {
         style={{ marginBottom: insets.bottom }}
         contentContainerClassName={'items-center'}
       >
-        <Text className="mb-4 mt-8 w-4/5 text-center text-2xl font-bold">
-          {movie?.title}
-        </Text>
-        <View className="w-3/5 overflow-hidden rounded-xl bg-white">
+        <View className="w-full overflow-hidden items-center rounded-xl bg-color1">
           <Image
-            className="h-[360px]  overflow-hidden "
+            className="h-[390px] w-3/5 bg-white overflow-hidden "
             contentFit="cover"
             source={{
               uri: movie?.image,
             }}
           />
-          <View className="flex-row items-center justify-center gap-2 py-2">
-            <Star width={20} height={20} />
-            <Text className="text-base font-bold text-orange">
-              {movie?.rating},0
-            </Text>
-          </View>
         </View>
+        <View className="flex-row items-center justify-center gap-2 py-2">
+          <Star width={20} height={20} />
+          <Text className="text-base font-bold text-orange">
+            {movie?.rating},0
+          </Text>
+        </View>
+        <Text className="mb-4 mt-8 w-4/5 text-center text-2xl font-bold">
+          {movie?.title}
+        </Text>
         <View className="mx-4 mt-4 flex-1">
           <Text
             numberOfLines={!showDescription ? 4 : undefined}

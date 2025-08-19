@@ -10,11 +10,6 @@ import { StyleSheet, Text } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
-import {
-  initializeFacebookAttribution,
-  trackAppLaunch,
-  trackFirstAppOpen,
-} from 'src/lib/facebook-attribution';
 import { readMovies } from 'src/lib/storage/modules/movies';
 
 import AppLinkWrapper from '@/components/wrappers/app-link-wrapper';
