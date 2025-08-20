@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import * as React from 'react';
-import { Pressable, ScrollView } from 'react-native';
+import { Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, colors, Image, Text, useModal, View } from '@/components/ui';
@@ -50,10 +50,10 @@ export default function FilmInfo() {
     }
   }, [movie]);
   return (
-    <View className="flex-1 ">
+    <View className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
       <View
-        className="bg-color1 flex-row items-center justify-between rounded-b-3xl px-5 pb-4"
+        className="flex-row items-center justify-between rounded-b-3xl bg-color1 px-5 pb-4"
         style={{ paddingTop: insets.top + 8 }}
       >
         <Pressable onPress={onPress}>
@@ -64,38 +64,39 @@ export default function FilmInfo() {
         style={{ marginBottom: insets.bottom }}
         contentContainerClassName={'items-center'}
       >
-        <View className="w-full overflow-hidden items-center rounded-xl bg-color1">
+        <View className="w-full items-center overflow-hidden rounded-xl bg-color1">
           <Image
-            className="h-[390px] w-3/5 bg-white overflow-hidden "
+            className="h-[390px] w-3/5 overflow-hidden bg-white "
             contentFit="cover"
             source={{
               uri: movie?.image,
             }}
           />
         </View>
-        <View className="flex-row items-center justify-center gap-2 py-2">
-          <Star width={20} height={20} />
-          <Text className="text-base font-bold text-orange">
-            {movie?.rating},0
-          </Text>
-        </View>
         <Text className="mb-4 mt-8 w-4/5 text-center text-2xl font-bold">
           {movie?.title}
         </Text>
-        <View className="mx-4 mt-4 flex-1">
+        <Text>
+          {movie?.runtime},{movie?.release_year},{movie?.countries.join(', ')}
+        </Text>
+        <View className="flex-row items-center  justify-center gap-2 rounded-lg bg-white px-4 py-2 shadow-lg">
+          <Star width={20} height={20} />
+          <Text className="text-base font-bold">{movie?.rating},0</Text>
+        </View>
+
+        <View className="mx-4 mt-4 flex-1 items-start">
           <Text
             numberOfLines={!showDescription ? 4 : undefined}
-            className="text-justify  text-base"
+            className=" text-base"
           >
             {movie?.description}
           </Text>
           {!showDescription && (
-            <Button
+            <TouchableOpacity
               onPress={() => setShowDescription((state) => !state)}
-              variant={'secondary'}
-              label={'More description'}
-              className="mt-4"
-            />
+            >
+              <Text>Read more</Text>
+            </TouchableOpacity>
           )}
         </View>
         <View className={'mt-8 w-full gap-2 px-4'}>

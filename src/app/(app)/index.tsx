@@ -2,27 +2,18 @@ import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, Image, Input, Text, View } from '@/components/ui';
 import { Search, Settings } from '@/components/ui/icons';
 import { Clapperboard } from '@/components/ui/icons/clapperboard';
+import { useMovie } from '@/lib/storage';
+import { type Movie } from '@/types';
 
 const SView = View;
 const SText = Text;
 const SInput = Input;
 const SPressable = TouchableOpacity;
-
-export type Movie = {
-  id: string;
-  title: string;
-  year?: string;
-  duration?: string; // e.g. "1h 47m"
-  country?: string; // e.g. "Australia"
-  genre: string; // one tag (for UI brevity)
-  poster: string; // image uri
-  rating?: number; // 0..5
-};
 
 const RECOMMENDED: Movie[] = [
   {
@@ -282,7 +273,7 @@ export default function MoviesScreen() {
   // UI state
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All'); // static for demo
-  const [library, setLibrary] = useState<Movie[]>(INITIAL_LIBRARY);
+  const library = useMovie.use.movies();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const selectionMode = selectedIds.size > 0;
@@ -305,8 +296,8 @@ export default function MoviesScreen() {
   };
 
   const onDelete = () => {
-    setLibrary((prev) => prev.filter((m) => !selectedIds.has(m.id)));
-    setSelectedIds(new Set());
+    // setLibrary((prev) => prev.filter((m) => !selectedIds.has(m.id)));
+    // setSelectedIds(new Set());
   };
 
   const searchResults = useMemo(() => {
@@ -328,9 +319,12 @@ export default function MoviesScreen() {
   const inset = useSafeAreaInsets();
 
   const Header = (
-    <SView className="px-5 pb-3 bg-color1" style={{
-      paddingTop: inset.top + 12,
-    }}>
+    <SView
+      className="bg-color1 px-5 pb-3"
+      style={{
+        paddingTop: inset.top + 12,
+      }}
+    >
       <SView className="mb-12 flex-row items-center justify-end">
         <SView className="flex-row items-center gap-3">
           <TouchableOpacity
@@ -404,14 +398,14 @@ export default function MoviesScreen() {
           >
             <SView className="h-[140px] w-[95px] overflow-hidden rounded-2xl bg-black/10">
               <Image
-                source={{ uri: item.poster }}
+                source={{ uri: item.image }}
                 style={{ width: '100%', height: '100%' }}
               />
             </SView>
             <SText className="mt-2" numberOfLines={1}>
               {item.title}
             </SText>
-            <SText className="text-black/50">{item.genre}</SText>
+            <SText className="text-black/50">{item.genres?.[0]}</SText>
           </TouchableOpacity>
         )}
       />
@@ -448,7 +442,7 @@ export default function MoviesScreen() {
         <SView className="mr-4 w-[88px]">
           <SView className="h-[116px] w-[88px] overflow-hidden rounded-2xl bg-black/10">
             <Image
-              source={{ uri: item.poster }}
+              source={{ uri: item.image }}
               style={{ width: '100%', height: '100%' }}
             />
           </SView>
@@ -465,11 +459,11 @@ export default function MoviesScreen() {
             {item.title}
           </SText>
           <SText className="mt-1 text-black/40">
-            {[item.duration, item.year, item.country]
+            {[item.runtime, item.release_year, item.countries?.[0]]
               .filter(Boolean)
               .join(', ')}
           </SText>
-          <SText className="mt-2 text-black/70">#{item.genre}</SText>
+          <SText className="mt-2 text-black/70">#{item.genres?.[0]}</SText>
           <SText className="mt-2 text-black/60" numberOfLines={2}>
             Haunted by the ghosts of the past, Max is convinced that the best
             way to survive is t...

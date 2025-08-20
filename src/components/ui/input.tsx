@@ -16,11 +16,11 @@ import { Text } from './text';
 
 const inputTv = tv({
   slots: {
-    container: '',
+    container: 'flex-1',
     inputContainer: 'align-center relative flex-row gap-2',
     label: 'mb-2 font-inter text-lg font-medium text-textGrey',
     input:
-      'rounded-xl border-neutral-300 bg-bgGrey p-4 font-inter text-base font-medium  leading-5 dark:border-neutral-700 dark:text-white',
+      'rounded-xl border-neutral-300 p-4 font-inter bg-white text-base font-medium  leading-5 dark:border-neutral-700 dark:text-white',
   },
 
   variants: {

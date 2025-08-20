@@ -17,9 +17,9 @@ import {
 } from '@/components/ui';
 import { ArrowLeft, Close, Gallery, Star } from '@/components/ui/icons';
 import { MovieGenres } from '@/lib/consts';
+import { trackMovieEvent } from '@/lib/facebook-attribution';
 import { addMovie, updateMovie, useMovie } from '@/lib/storage';
 import { deleteImage, saveImagePermanently } from '@/lib/utils/image-manager';
-import { trackMovieEvent } from '@/lib/facebook-attribution';
 import { type Movie } from '@/types';
 
 const schema = z.object({
@@ -107,7 +107,7 @@ const Id = () => {
       actors: value.actor_object?.array ?? [],
       genres: value.genres ?? [],
     };
-    
+
     // Track Facebook attribution event
     const isNewMovie = !movie;
     if (isNewMovie) {
@@ -122,12 +122,12 @@ const Id = () => {
     } else {
       updateMovie(new_movie);
     }
-    
+
     router.back();
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-light">
       <Stack.Screen options={{ headerShown: false }} />
       <View
         className="flex-row items-center justify-between rounded-b-3xl bg-light px-5 pb-4"
@@ -141,176 +141,185 @@ const Id = () => {
         contentContainerClassName="gap-4 px-4"
         style={{ marginBottom: insets.bottom }}
       >
-        <Text className="mt-4 text-xl font-bold">Основное</Text>
-        <Controller
-          name={'image'}
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <TouchableOpacity
-              onPress={() => onPickImage(onChange)}
-              className="h-44 w-32 items-center justify-center rounded-xl bg-bgGrey"
-            >
-              {value ? (
-                <View className={'relative'}>
-                  <Image
-                    className="h-44 w-32 rounded-xl"
-                    contentFit={'cover'}
-                    source={{
-                      uri: value,
-                    }}
-                  />
-                  <TouchableOpacity
-                    onPress={() => onChange('')}
-                    className={
-                      'absolute -right-3 -top-3 rounded-2xl bg-bgGrey p-1'
-                    }
-                  >
-                    <Close color={colors.textGrey} width={20} height={20} />
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <Gallery />
-              )}
-            </TouchableOpacity>
-          )}
-        />
-
-        <ControlledInput control={control} name={'title'} label={'Title'} />
-        <ControlledInput
-          name={'description'}
-          textAlignVertical="top"
-          multiline
-          control={control}
-          style={{ minHeight: 100 }}
-          label={'Description'}
-        />
-        <View className="gap-2">
-          <Text className="text-lg text-textGrey">Rating</Text>
+        <Text className="mt-4 text-xl font-bold">Main</Text>
+        <View className="items-center justify-center">
           <Controller
-            render={({ field: { value, onChange } }) => (
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row gap-2 self-start">
-                  {new Array(5).fill(0).map((_, i) => (
-                    <TouchableOpacity
-                      key={i}
-                      onPress={() => onChange(i + 1)}
-                      className={`items-center justify-center rounded-xl ${value >= i + 1 ? 'bg-orange' : 'bg-bgGrey'} p-4`}
-                    >
-                      <Star
-                        color={value >= i + 1 ? 'white' : colors.textGrey}
-                        width={20}
-                        height={20}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <Text className="text-lg font-bold">{value}.0</Text>
-              </View>
-            )}
-            name={'rating'}
+            name={'image'}
             control={control}
+            render={({ field: { value, onChange } }) => (
+              <TouchableOpacity
+                onPress={() => onPickImage(onChange)}
+                className="size-32 items-center justify-center rounded-full mb-8 bg-white"
+              >
+                {value ? (
+                  <View className={'relative'}>
+                    <Image
+                      className="size-32 rounded-full"
+                      contentFit={'cover'}
+                      source={{
+                        uri: value,
+                      }}
+                    />
+                    <TouchableOpacity
+                      onPress={() => onChange('')}
+                      className={
+                        'absolute -right-3 -top-3 rounded-2xl bg-bgGrey p-1'
+                      }
+                    >
+                      <Close color={colors.textGrey} width={20} height={20} />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <Gallery />
+                )}
+              </TouchableOpacity>
+            )}
           />
         </View>
-        <View className="mt-10 gap-8">
-          <Text className="mb-4 text-2xl text-black">Information</Text>
+        <View className={'flex-1 flex-row items-center gap-2'}>
+          <Text className="text-color2 w-1/4 text-lg">Movie name</Text>
+          <ControlledInput control={control} name={'title'} />
+        </View>
+        <View className={'flex-1 flex-row items-center gap-2'}>
+          <Text className="text-color2 w-1/4 text-lg">Movie name</Text>
           <ControlledInput
+            name={'description'}
+            textAlignVertical="top"
+            multiline
             control={control}
-            name={'director'}
-            label={'Director'}
+            style={{ minHeight: 100 }}
+            label={'Description'}
           />
-          <ControlledInput
-            control={control}
-            name={'runtime'}
-            label={'Runtime'}
-          />
-          <ControlledInput
-            control={control}
-            name={'release_year'}
-            label={'Release year'}
-          />
-          <View>
-            <Text className="mb-1 text-lg text-textGrey">Country</Text>
+        </View>
+        <View className="gap-2">
+          <View className={'flex-1 flex-row items-center gap-2'}>
+            <Text className="text-color2 w-1/4 text-lg">Rating</Text>
             <Controller
               render={({ field: { value, onChange } }) => (
-                <View className={`rounded-xl bg-light`}>
-                  <Input
-                    outlined
-                    value={value?.value ?? ''}
-                    onChangeText={(text) => onChange({ ...value, value: text })}
-                    icon={
+                <View className="flex-1 px-4 bg-white rounded-xl flex-row items-center justify-between">
+                  <View className="flex-row items-center gap-2 self-start p-3">
+                    {new Array(5).fill(0).map((_, i) => (
                       <TouchableOpacity
-                        onPress={() =>
-                          onChange({
-                            value: '',
-                            array: [
-                              ...(value?.array ?? []),
-                              value?.value ?? '',
-                            ],
-                          })
-                        }
+                        key={i}
+                        onPress={() => onChange(i + 1)}
+                        className={`items-center justify-center rounded-xl`}
                       >
-                        <Text className="mr-6 p-2 text-lg  text-blue">
-                          Save
-                        </Text>
+                        <Star
+                          color={
+                            value >= i + 1 ? colors.black : colors.textGrey
+                          }
+                          width={20}
+                          height={20}
+                        />
                       </TouchableOpacity>
-                    }
-                  />
-                  {value && value.array && value.array.length > 0 && (
-                    <View className="mx-4 gap-3 py-4">
-                      <View className="flex-row items-center justify-between ">
-                        <Text className="text-base text-textGrey">
-                          Total: {value.array.length}
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => onChange({ ...value, array: [] })}
-                          className="flex-row items-center gap-2"
-                        >
-                          <Text className="text-base text-textGrey">
-                            Clear all
-                          </Text>
-                          <Close width={16} height={16} />
-                        </TouchableOpacity>
-                      </View>
-
-                      <View className="flex-row flex-wrap gap-2">
-                        {value.array.map((item) => (
-                          <View
-                            key={item}
-                            className="flex-row items-center justify-between gap-2 rounded-lg border border-lightGrey2 bg-white px-4 py-2"
-                          >
-                            <Text className="text-base">{item}</Text>
-                            <TouchableOpacity
-                              onPress={() =>
-                                onChange({
-                                  ...value,
-                                  array: (value?.array ?? []).filter(
-                                    (i) => i !== item
-                                  ),
-                                })
-                              }
-                            >
-                              <Close
-                                width={16}
-                                height={16}
-                                color={colors.textGrey}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        ))}
-                      </View>
-                    </View>
-                  )}
+                    ))}
+                  </View>
+                  <Text className="text-lg font-bold">{value}.0</Text>
                 </View>
               )}
-              name={'country_object'}
+              name={'rating'}
               control={control}
             />
           </View>
-          <View className="mt-8">
-            <Text className="mb-1 text-lg text-textGrey">Actors</Text>
+        </View>
+        <View className="mt-10 gap-8">
+          <Text className="mb-4 text-2xl text-black">Information</Text>
+          <View className={'flex-1 flex-row items-center gap-2'}>
+            <Text className="text-color2 w-1/4 text-lg">Director</Text>
+            <ControlledInput control={control} name={'director'} />
+          </View>
+          <View className={'flex-1 flex-row items-center gap-2'}>
+            <Text className="text-color2 w-1/4 text-lg">Duration</Text>
+            <ControlledInput control={control} name={'runtime'} />
+          </View>
+
+          <View>
+            <View className={'flex-1 flex-row items-center gap-2'}>
+              <Text className="text-color2 w-1/4 text-lg">Country</Text>
+              <Controller
+                render={({ field: { value, onChange } }) => (
+                  <View className={`flex-1 rounded-xl bg-light`}>
+                    <Input
+                      outlined
+                      value={value?.value ?? ''}
+                      onChangeText={(text) =>
+                        onChange({ ...value, value: text })
+                      }
+                      icon={
+                        <TouchableOpacity
+                          onPress={() =>
+                            onChange({
+                              value: '',
+                              array: [
+                                ...(value?.array ?? []),
+                                value?.value ?? '',
+                              ],
+                            })
+                          }
+                        >
+                          <Text className="mr-6 p-2 text-lg  text-black">
+                            Save
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                    />
+                    {value && value.array && value.array.length > 0 && (
+                      <View className="mx-4 gap-3 py-4">
+                        <View className="flex-row items-center justify-between ">
+                          <Text className="text-base text-textGrey">
+                            Total: {value.array.length}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => onChange({ ...value, array: [] })}
+                            className="flex-row items-center gap-2"
+                          >
+                            <Text className="text-base text-textGrey">
+                              Clear all
+                            </Text>
+                            <Close width={16} height={16} />
+                          </TouchableOpacity>
+                        </View>
+
+                        <View className="flex-row flex-wrap gap-2">
+                          {value.array.map((item) => (
+                            <View
+                              key={item}
+                              className="flex-row items-center justify-between gap-2 rounded-lg border border-lightGrey2 bg-white px-4 py-2"
+                            >
+                              <Text className="text-base">{item}</Text>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  onChange({
+                                    ...value,
+                                    array: (value?.array ?? []).filter(
+                                      (i) => i !== item
+                                    ),
+                                  })
+                                }
+                              >
+                                <Close
+                                  width={16}
+                                  height={16}
+                                  color={colors.textGrey}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                )}
+                name={'country_object'}
+                control={control}
+              />
+            </View>
+          </View>
+          <View className={'flex-1 flex-row items-center gap-2'}>
+            <Text className="text-color2 w-1/4 text-lg">Artists</Text>
             <Controller
               render={({ field: { value, onChange } }) => (
-                <View className={`rounded-xl bg-light`}>
+                <View className={`flex-1 rounded-xl bg-light`}>
                   <Input
                     outlined
                     value={value?.value ?? ''}
@@ -327,7 +336,7 @@ const Id = () => {
                           })
                         }
                       >
-                        <Text className="mr-6 p-2 text-lg  text-blue">
+                        <Text className="mr-6 p-2 text-lg  text-black">
                           Save
                         </Text>
                       </TouchableOpacity>
@@ -385,35 +394,37 @@ const Id = () => {
             />
           </View>
           <View>
-            <Text className="text-lg text-textGrey">Genres</Text>
-            <Controller
-              render={({ field: { value, onChange } }) => (
-                <View className="mt-2 flex-row flex-wrap gap-2 self-start">
-                  {Object.keys(MovieGenres).map((item) => (
-                    <TouchableOpacity
-                      key={item}
-                      onPress={() =>
-                        onChange(
-                          value?.find((genre) => genre === item)
-                            ? (value?.filter((genre) => genre !== item) ?? [])
-                            : [...(value || []), item]
-                        )
-                      }
-                    >
-                      <Text
-                        className={`${value?.find((genre) => item === genre) ? 'bg-blue text-white' : 'bg-lightGrey text-black'}
+            <View className={'flex-1 flex-row items-center gap-2'}>
+              <Text className="text-color2 w-1/4 text-lg">Genres</Text>
+              <Controller
+                render={({ field: { value, onChange } }) => (
+                  <View className="mt-2 flex-1 flex-row flex-wrap gap-2 self-start">
+                    {Object.keys(MovieGenres).map((item) => (
+                      <TouchableOpacity
+                        key={item}
+                        onPress={() =>
+                          onChange(
+                            value?.find((genre) => genre === item)
+                              ? (value?.filter((genre) => genre !== item) ?? [])
+                              : [...(value || []), item]
+                          )
+                        }
+                      >
+                        <Text
+                          className={`${value?.find((genre) => item === genre) ? 'bg-blue text-white' : 'bg-lightGrey text-black'}
                           rounded-lg px-3 py-1 text-base 
                         `}
-                      >
-                        {MovieGenres[item as keyof typeof MovieGenres]}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-              name={'genres'}
-              control={control}
-            />
+                        >
+                          {MovieGenres[item as keyof typeof MovieGenres]}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+                name={'genres'}
+                control={control}
+              />
+            </View>
           </View>
           <Button
             className="mt-12"
