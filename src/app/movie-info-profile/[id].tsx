@@ -7,6 +7,7 @@ import { Button, colors, Image, Text, useModal, View } from '@/components/ui';
 import Chips from '@/components/ui/chip/сhips';
 import { ArrowLeft, Pen, Star, TrashCan } from '@/components/ui/icons';
 import DeleteModal from '@/components/ui/modal/delete-modal';
+import { useSelectedTheme } from '@/lib';
 import { trackContentView, trackMovieEvent } from '@/lib/facebook-attribution';
 import { deleteMovie, useMovie } from '@/lib/storage';
 import { deleteImage } from '@/lib/utils/image-manager';
@@ -49,22 +50,25 @@ export default function FilmInfo() {
       });
     }
   }, [movie]);
+  const { selectedTheme } = useSelectedTheme();
+  const isDark = selectedTheme === 'dark';
+
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white dark:bg-dark">
       <Stack.Screen options={{ headerShown: false }} />
       <View
-        className="flex-row items-center justify-between rounded-b-3xl bg-color1 px-5 pb-4"
+        className="flex-row items-center justify-between bg-color1 px-5 pb-4 dark:bg-color3"
         style={{ paddingTop: insets.top + 8 }}
       >
         <Pressable onPress={onPress}>
-          <ArrowLeft />
+          <ArrowLeft color={isDark ? 'white' : 'black'} />
         </Pressable>
       </View>
       <ScrollView
         style={{ marginBottom: insets.bottom }}
         contentContainerClassName={'items-center'}
       >
-        <View className="w-full items-center overflow-hidden rounded-xl bg-color1">
+        <View className="w-full items-center overflow-hidden bg-color1 dark:bg-color3">
           <Image
             className="h-[390px] w-3/5 overflow-hidden bg-white "
             contentFit="cover"
@@ -79,15 +83,19 @@ export default function FilmInfo() {
         <Text>
           {movie?.runtime},{movie?.release_year},{movie?.countries.join(', ')}
         </Text>
-        <View className="flex-row items-center  justify-center gap-2 rounded-lg bg-white px-4 py-2 shadow-lg">
-          <Star width={20} height={20} />
+        <View className="flex-row items-center  justify-center gap-2 rounded-lg bg-white px-4 py-2 shadow-lg dark:bg-dark">
+          <Star
+            width={20}
+            height={20}
+            color={isDark ? colors.white : colors.black}
+          />
           <Text className="text-base font-bold">{movie?.rating},0</Text>
         </View>
 
         <View className="mx-4 mt-4 flex-1 items-start">
           <Text
             numberOfLines={!showDescription ? 4 : undefined}
-            className=" text-base"
+            className=" w-full text-base"
           >
             {movie?.description}
           </Text>
@@ -95,7 +103,7 @@ export default function FilmInfo() {
             <TouchableOpacity
               onPress={() => setShowDescription((state) => !state)}
             >
-              <Text>Read more</Text>
+              <Text className="text-lg text-grey">Read more</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -103,18 +111,6 @@ export default function FilmInfo() {
           <View className={'flex-row'}>
             <Text className="w-1/3 text-base font-bold">Director</Text>
             <Text className="text-base">{movie?.director}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Runtime</Text>
-            <Text className="text-base">{movie?.runtime}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Release year</Text>
-            <Text className="text-base">{movie?.release_year}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Country</Text>
-            <Text className="text-base">{movie?.countries.join(', ')}</Text>
           </View>
           <View className={'flex-row'}>
             <Text className="w-1/3 text-base font-bold">Actors</Text>
