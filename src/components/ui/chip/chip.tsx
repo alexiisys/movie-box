@@ -12,7 +12,7 @@ const Chip = ({ label, variant = 'light' }: ChipProps) => {
     <Text
       className={`rounded-sm  px-3 py-px ${variant === 'light' ? 'bg-light text-textGrey' : 'bg-lightGrey2 text-base text-black'}`}
     >
-      {label}
+      #{label}
     </Text>
   );
 };

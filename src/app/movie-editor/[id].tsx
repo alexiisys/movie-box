@@ -149,7 +149,7 @@ const Id = () => {
             render={({ field: { value, onChange } }) => (
               <TouchableOpacity
                 onPress={() => onPickImage(onChange)}
-                className="size-32 items-center justify-center rounded-full mb-8 bg-white"
+                className="mb-8 size-32 items-center justify-center rounded-full bg-white"
               >
                 {value ? (
                   <View className={'relative'}>
@@ -177,26 +177,25 @@ const Id = () => {
           />
         </View>
         <View className={'flex-1 flex-row items-center gap-2'}>
-          <Text className="text-color2 w-1/4 text-lg">Movie name</Text>
+          <Text className="w-1/4 text-lg text-color2">Movie name</Text>
           <ControlledInput control={control} name={'title'} />
         </View>
         <View className={'flex-1 flex-row items-center gap-2'}>
-          <Text className="text-color2 w-1/4 text-lg">Movie name</Text>
+          <Text className="w-1/4 text-lg text-color2">Description</Text>
           <ControlledInput
             name={'description'}
             textAlignVertical="top"
             multiline
             control={control}
             style={{ minHeight: 100 }}
-            label={'Description'}
           />
         </View>
         <View className="gap-2">
           <View className={'flex-1 flex-row items-center gap-2'}>
-            <Text className="text-color2 w-1/4 text-lg">Rating</Text>
+            <Text className="w-1/4 text-lg text-color2">Rating</Text>
             <Controller
               render={({ field: { value, onChange } }) => (
-                <View className="flex-1 px-4 bg-white rounded-xl flex-row items-center justify-between">
+                <View className="flex-1 flex-row items-center justify-between rounded-xl bg-white px-4">
                   <View className="flex-row items-center gap-2 self-start p-3">
                     {new Array(5).fill(0).map((_, i) => (
                       <TouchableOpacity
@@ -225,17 +224,17 @@ const Id = () => {
         <View className="mt-10 gap-8">
           <Text className="mb-4 text-2xl text-black">Information</Text>
           <View className={'flex-1 flex-row items-center gap-2'}>
-            <Text className="text-color2 w-1/4 text-lg">Director</Text>
+            <Text className="w-1/4 text-lg text-color2">Director</Text>
             <ControlledInput control={control} name={'director'} />
           </View>
           <View className={'flex-1 flex-row items-center gap-2'}>
-            <Text className="text-color2 w-1/4 text-lg">Duration</Text>
+            <Text className="w-1/4 text-lg text-color2">Duration</Text>
             <ControlledInput control={control} name={'runtime'} />
           </View>
 
           <View>
             <View className={'flex-1 flex-row items-center gap-2'}>
-              <Text className="text-color2 w-1/4 text-lg">Country</Text>
+              <Text className="w-1/4 text-lg text-color2">Country</Text>
               <Controller
                 render={({ field: { value, onChange } }) => (
                   <View className={`flex-1 rounded-xl bg-light`}>
@@ -316,7 +315,7 @@ const Id = () => {
             </View>
           </View>
           <View className={'flex-1 flex-row items-center gap-2'}>
-            <Text className="text-color2 w-1/4 text-lg">Artists</Text>
+            <Text className="w-1/4 text-lg text-color2">Artists</Text>
             <Controller
               render={({ field: { value, onChange } }) => (
                 <View className={`flex-1 rounded-xl bg-light`}>
@@ -395,7 +394,7 @@ const Id = () => {
           </View>
           <View>
             <View className={'flex-1 flex-row items-center gap-2'}>
-              <Text className="text-color2 w-1/4 text-lg">Genres</Text>
+              <Text className="w-1/4 text-lg text-color2">Genres</Text>
               <Controller
                 render={({ field: { value, onChange } }) => (
                   <View className="mt-2 flex-1 flex-row flex-wrap gap-2 self-start">

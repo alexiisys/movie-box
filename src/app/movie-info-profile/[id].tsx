@@ -80,14 +80,14 @@ export default function FilmInfo() {
           {movie?.runtime},{movie?.release_year},{movie?.countries.join(', ')}
         </Text>
         <View className="flex-row items-center  justify-center gap-2 rounded-lg bg-white px-4 py-2 shadow-lg">
-          <Star width={20} height={20} />
+          <Star width={20} height={20} color={colors.black}/>
           <Text className="text-base font-bold">{movie?.rating},0</Text>
         </View>
 
         <View className="mx-4 mt-4 flex-1 items-start">
           <Text
             numberOfLines={!showDescription ? 4 : undefined}
-            className=" text-base"
+            className=" text-base w-full"
           >
             {movie?.description}
           </Text>
@@ -95,7 +95,7 @@ export default function FilmInfo() {
             <TouchableOpacity
               onPress={() => setShowDescription((state) => !state)}
             >
-              <Text>Read more</Text>
+              <Text className='text-lg text-grey'>Read more</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -103,18 +103,6 @@ export default function FilmInfo() {
           <View className={'flex-row'}>
             <Text className="w-1/3 text-base font-bold">Director</Text>
             <Text className="text-base">{movie?.director}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Runtime</Text>
-            <Text className="text-base">{movie?.runtime}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Release year</Text>
-            <Text className="text-base">{movie?.release_year}</Text>
-          </View>
-          <View className={'flex-row'}>
-            <Text className="w-1/3 text-base font-bold">Country</Text>
-            <Text className="text-base">{movie?.countries.join(', ')}</Text>
           </View>
           <View className={'flex-row'}>
             <Text className="w-1/3 text-base font-bold">Actors</Text>

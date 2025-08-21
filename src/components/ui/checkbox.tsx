@@ -11,6 +11,8 @@ import Svg, { Path } from 'react-native-svg';
 import colors from '@/components/ui/colors';
 
 import { Text } from './text';
+import { Sun } from './icons/Sun';
+import { Moon } from '@/components/ui/icons/Moon';
 
 const SIZE = 20;
 const WIDTH = 50;
@@ -75,7 +77,7 @@ const Label = ({ text, testID, className = '' }: LabelProps) => {
 };
 
 export const CheckboxIcon = ({ checked = false }: IconProps) => {
-  const color = checked ? colors.primary[300] : colors.charcoal[400];
+  const color = checked ? colors.black: 'transparent';
   return (
     <MotiView
       style={{
@@ -86,8 +88,8 @@ export const CheckboxIcon = ({ checked = false }: IconProps) => {
       className="items-center justify-center rounded-[5px] border-2"
       from={{ backgroundColor: 'transparent', borderColor: '#CCCFD6' }}
       animate={{
-        backgroundColor: checked ? color : 'transparent',
-        borderColor: color,
+        backgroundColor: color,
+        borderColor: colors.black,
       }}
       transition={{
         backgroundColor: { type: 'timing', duration: 100 },
@@ -206,11 +208,24 @@ export const SwitchIcon = ({ checked = false }: IconProps) => {
     ? THUMB_OFFSET
     : WIDTH - THUMB_WIDTH - THUMB_OFFSET;
 
-  const backgroundColor = checked ? colors.light : colors.textGrey;
+  const backgroundColor = colors.green;
 
+  const icon = !checked ? (
+    <Sun
+      color={colors.green}
+      width={THUMB_WIDTH - 3}
+      height={THUMB_HEIGHT - 3}
+    />
+  ) : (
+    <Moon
+      color={colors.green}
+      width={THUMB_WIDTH - 3}
+      height={THUMB_HEIGHT - 3}
+    />
+  );
   return (
     <View className="w-[50px] justify-center">
-      <View className="overflow-hidden rounded-full">
+      <View className="border-gray overflow-hidden rounded-full">
         <View
           style={{
             width: WIDTH,
@@ -224,7 +239,8 @@ export const SwitchIcon = ({ checked = false }: IconProps) => {
           height: THUMB_HEIGHT,
           width: THUMB_WIDTH,
           position: 'absolute',
-          backgroundColor: 'white',
+          backgroundColor: colors.dark,
+          padding: 2,
           borderRadius: 13,
           right: 0,
         }}
@@ -232,10 +248,13 @@ export const SwitchIcon = ({ checked = false }: IconProps) => {
           translateX: I18nManager.isRTL ? translateX : -translateX,
         }}
         transition={{ translateX: { overshootClamping: true } }}
-      />
+      >
+        {icon}
+      </MotiView>
     </View>
   );
 };
+
 const SwitchRoot = ({ checked = false, children, ...props }: RootProps) => {
   return (
     <Root checked={checked} accessibilityRole="switch" {...props}>
