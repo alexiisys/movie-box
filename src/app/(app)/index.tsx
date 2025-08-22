@@ -8,6 +8,7 @@ import { Checkbox, colors, Image, Input, Text, View } from '@/components/ui';
 import { Search, Settings, TrashCan } from '@/components/ui/icons';
 import { Clapperboard } from '@/components/ui/icons/clapperboard';
 import { CustomeIcon } from '@/components/ui/icons/custome-icon';
+import { useSelectedTheme } from '@/lib';
 import { deleteMovie, useMovie } from '@/lib/storage';
 import { type Movie } from '@/types';
 
@@ -40,6 +41,8 @@ export default function MoviesScreen() {
   const [category, setCategory] = useState('All');
   const library = useMovie.use.movies();
 
+  const { selectedTheme } = useSelectedTheme();
+  const isDark = selectedTheme === 'dark';
   const filtredLibrary = useMemo(
     () =>
       category === 'All'
@@ -70,7 +73,7 @@ export default function MoviesScreen() {
   );
   const Header = (
     <SView
-      className="bg-color1 px-5 pb-3"
+      className="bg-color3 bg-color1 px-5 pb-3"
       style={{
         paddingTop: inset.top + 12,
       }}
@@ -81,7 +84,7 @@ export default function MoviesScreen() {
             onPress={() => router.navigate(`/(app)/settings`)}
             className="size-7 items-center justify-center rounded-full "
           >
-            <Settings color={colors.black} />
+            <Settings color={isDark ? colors.white : colors.black} />
           </TouchableOpacity>
           <SPressable className="rounded-xl bg-green px-4 py-2">
             <TouchableOpacity
@@ -89,7 +92,9 @@ export default function MoviesScreen() {
               className="flex-row items-center gap-2"
             >
               <Clapperboard />
-              <SText className="text-md">Add a movie</SText>
+              <SText className="text-md text-black dark:text-black">
+                Add a movie
+              </SText>
             </TouchableOpacity>
           </SPressable>
         </SView>
@@ -106,11 +111,16 @@ export default function MoviesScreen() {
             key={t}
             className="mr-6 border-b-2 pb-2"
             style={{
-              borderBottomColor: t === category ? '#000' : 'transparent',
+              borderBottomColor:
+                t === category
+                  ? isDark
+                    ? colors.white
+                    : '#000'
+                  : 'transparent',
             }}
           >
             <SText
-              className={`text-[18px] ${t === category ? 'font-extrabold' : 'font-semibold'} text-black capitalize`}
+              className={`text-[18px] ${t === category ? 'font-extrabold' : 'font-semibold'} capitalize`}
             >
               {t}
             </SText>
@@ -150,7 +160,9 @@ export default function MoviesScreen() {
             <SText className="mt-2" numberOfLines={1}>
               {item.title}
             </SText>
-            <SText className="text-black/50">{item.genres?.[0]}</SText>
+            <SText className="text-black/50 dark:text-color2">
+              {item.genres?.[0]}
+            </SText>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -160,7 +172,7 @@ export default function MoviesScreen() {
   const MyMoviesHeader = (
     <SView className="mb-3 mt-8 flex-row items-center justify-between">
       <SView className="flex-row items-center gap-3">
-        <SView className="size-10 items-center justify-center rounded-2xl bg-black/10">
+        <SView className="size-10 items-center justify-center rounded-2xl bg-[#F0FE42]">
           <CustomeIcon />
         </SView>
         <SText className="text-[28px]">My movies</SText>
@@ -173,7 +185,9 @@ export default function MoviesScreen() {
 
         <Checkbox
           onChange={() =>
-            setChosen(chosen.length > 0 ? [] : filtredLibrary.map((item) => item.id))
+            setChosen(
+              chosen.length > 0 ? [] : filtredLibrary.map((item) => item.id)
+            )
           }
           accessibilityLabel={'Choose'}
           checked={chosen.length > 0}
@@ -196,7 +210,7 @@ export default function MoviesScreen() {
             />
           </SView>
           {!!item.rating && (
-            <SView className="mt-2 flex-1 flex-row items-center justify-center gap-1 rounded-xl border border-black/10 bg-white px-2 py-1">
+            <SView className="mt-2 flex-1 flex-row items-center justify-center gap-1 rounded-xl border border-black/10 bg-white px-2 py-1 dark:border dark:border-color2 dark:bg-dark">
               <SText>★</SText>
               <SText className="font-semibold">{item.rating}</SText>
             </SView>
@@ -207,7 +221,7 @@ export default function MoviesScreen() {
           <SText className="text-[24px]" numberOfLines={2}>
             {item.title}
           </SText>
-          <SText className="mt-1 text-black/40">
+          <SText className="mt-1 text-black/40 dark:text-color2">
             {[item.runtime, item.release_year, item.countries?.[0]]
               .filter(Boolean)
               .join(', ')}
@@ -239,7 +253,7 @@ export default function MoviesScreen() {
     <SView className="flex-1 px-5">
       {MyMoviesHeader}
       <FlashList
-        className='flex-1'
+        className="flex-1"
         data={filtredLibrary}
         extraData={[chosen]}
         estimatedItemSize={160}
@@ -272,7 +286,7 @@ export default function MoviesScreen() {
           className="flex-row items-center gap-3"
         >
           <SText className="text-[18px] text-white">
-            <TrashCan />
+            <TrashCan color={colors.white} />
           </SText>
           <SText className="text-[18px] font-semibold text-white">Delete</SText>
         </SPressable>
@@ -280,20 +294,20 @@ export default function MoviesScreen() {
     ) : null;
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 dark:bg-dark">
       <ScrollView>
-      {Header}
+        {Header}
 
-      {isSearching ? (
-        SearchResults
-      ) : (
-        <>
-          {RecommendSection}
-          {MyMoviesSection}
-        </>
-      )}
+        {isSearching ? (
+          SearchResults
+        ) : (
+          <>
+            {RecommendSection}
+            {MyMoviesSection}
+          </>
+        )}
 
-      {BottomDeleteBar}
+        {BottomDeleteBar}
       </ScrollView>
     </View>
   );
